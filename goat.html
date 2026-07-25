@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ছাগলের চিকিৎসা গাইডলাইন &mdash; বিস্তারিত তালিকা</title>
+<style>
+  :root{
+    --ink:#1c2b28;
+    --paper:#f6f4ee;
+    --panel:#ffffff;
+    --line:#dedad0;
+    --teal:#1f6f66;
+    --teal-deep:#144840;
+    --clay:#b5652f;
+    --muted:#6b6f6a;
+    --highlight:#fce8a8;
+    --red:#b91c1c;
+    --red-light:#fee2e2;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:'Noto Sans Bengali','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    display:flex;
+    flex-direction:column;
+  }
+  header{
+    padding:22px 28px 16px;
+    border-bottom:1px solid var(--line);
+    background:var(--panel);
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  header h1{
+    font-weight:700;
+    letter-spacing:-0.01em;
+    font-size:21px;
+    margin:0;
+    color:var(--teal-deep);
+  }
+  header .count{
+    font-size:12.5px;
+    color:var(--muted);
+  }
+  .layout{
+    flex:1;
+    display:flex;
+    min-height:0;
+  }
+  .sidebar{
+    width:320px;
+    min-width:260px;
+    border-right:1px solid var(--line);
+    background:var(--panel);
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+  .search-wrap{
+    padding:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .search-wrap input{
+    width:100%;
+    padding:10px 12px;
+    font-size:14.5px;
+    font-family:inherit;
+    border:1.5px solid var(--line);
+    border-radius:7px;
+    background:var(--paper);
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s;
+  }
+  .search-wrap input:focus{ border-color:var(--teal); }
+  .search-meta{
+    font-size:11.5px;
+    color:var(--muted);
+    margin-top:7px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .list{
+    flex:1;
+    overflow-y:auto;
+    padding:6px 0 20px;
+  }
+  .med-item{
+    display:block;
+    width:100%;
+    text-align:right;
+    padding:12px 16px;
+    border:none;
+    background:none;
+    cursor:pointer;
+    border-bottom:1px solid #f0eee6;
+    font-family:inherit;
+  }
+  .med-item:hover{ background:#f0f6f4; }
+  .med-item.active{ background:var(--teal); }
+  .med-item.active .med-name{ color:#fff; }
+  .med-item.active .med-brand{ color:#dff2ee; }
+  .med-name{
+    font-size:15px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:3px;
+  }
+  .med-brand{
+    font-size:12px;
+    color:var(--muted);
+  }
+  .med-item.critical .med-name{ color:var(--red); }
+  .med-item.critical.active .med-name{ color:#fff; }
+  mark{
+    background:var(--highlight);
+    color:inherit;
+    padding:0 1px;
+    border-radius:2px;
+  }
+  .no-results{
+    padding:30px 20px;
+    text-align:center;
+    color:var(--muted);
+    font-size:13.5px;
+  }
+  .content{
+    flex:1;
+    overflow-y:auto;
+    padding:36px 48px;
+  }
+  .welcome{
+    max-width:600px;
+    margin:60px auto;
+    text-align:center;
+    color:var(--muted);
+  }
+  .welcome h2{
+    color:var(--teal-deep);
+    font-size:24px;
+  }
+  .card{ max-width:780px; }
+  .card-eyebrow{
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    font-size:11.5px;
+    color:var(--clay);
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .card h2{
+    font-size:25px;
+    margin:0 0 18px;
+    color:var(--teal-deep);
+    line-height:1.35;
+  }
+  .card.critical h2{ color:var(--red); }
+  .critical-banner{
+    background:var(--red-light);
+    border:1px solid #f5cfcf;
+    color:var(--red);
+    font-weight:700;
+    font-size:13.5px;
+    padding:8px 14px;
+    border-radius:8px;
+    display:inline-block;
+    margin-bottom:20px;
+  }
+  .sections{ margin:0; }
+  .section-block{
+    padding:18px 0;
+    border-top:1px solid var(--line);
+  }
+  .section-block:first-of-type{ border-top:1px solid var(--line); }
+  .section-title{
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--teal);
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .section-title .dot{
+    width:20px; height:20px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:700;
+    color:#fff;
+    background:var(--teal);
+  }
+  .section-block.prevention{
+    background:#eef6f4;
+    border:1px solid #d9ebe6;
+    border-radius:10px;
+    padding:16px 18px;
+    margin-top:8px;
+  }
+  .section-block.prevention .section-title .dot{ background:var(--clay); }
+  .section-block ul{
+    margin:0;
+    padding-left:20px;
+  }
+  .section-block li{
+    font-size:15.5px;
+    line-height:1.75;
+    color:var(--ink);
+    margin-bottom:10px;
+  }
+  .section-block p{
+    margin:0;
+    font-size:15.5px;
+    line-height:1.75;
+    color:var(--ink);
+  }
+  @media (max-width: 760px){
+    .content{ padding:22px 16px; }
+    .sidebar{ position:absolute; inset:0; z-index:5; width:100%; }
+    .sidebar.hidden{ display:none; }
+    .layout{ position:relative; }
+    .content.hidden{ display:none; }
+    .back-btn{ display:inline-flex !important; }
+  }
+  .back-btn{
+    display:none;
+    align-items:center;
+    gap:6px;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--teal);
+    background:none;
+    border:none;
+    cursor:pointer;
+    margin-bottom:18px;
+    padding:0;
+  }
+  ::-webkit-scrollbar{ width:9px; }
+  ::-webkit-scrollbar-thumb{ background:#d8d3c6; border-radius:5px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ছাগলের চিকিৎসা গাইডলাইন</h1>
+  <span class="count" id="headerCount">6 টি বিষয়</span>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="search-wrap">
+      <input type="text" id="searchBox" placeholder="রোগ বা চিকিৎসা খুঁজুন..." autocomplete="off">
+      <div class="search-meta">
+        <span id="resultCount">6 টি বিষয়</span>
+        <span id="clearSearch" style="cursor:pointer; text-decoration:underline; display:none;">clear</span>
+      </div>
+    </div>
+    <div class="list" id="list"></div>
+  </aside>
+
+  <main class="content" id="content">
+    <div class="welcome">
+      <h2>ছাগলের চিকিৎসা ও খামার ব্যবস্থাপনা গাইডলাইন</h2>
+      <p>২০ কেজি ওজনের ছাগলের জন্য প্রেসক্রিপশন প্রোটোকল। বাম দিকের তালিকা থেকে একটি বিষয় নির্বাচন করুন অথবা সার্চ করুন।</p>
+    </div>
+  </main>
+</div>
+
+<script>
+const DATA = [{"Name": "১. পি.পি.আর (PPR) রোগের চিকিৎসা", "Critical": false, "Treatment": ["অ্যান্টিবায়োটিক: Inj. Ceftriaxone / Oxytetracycline - ২৫০ - ৫০০ মি.গ্রা. IM প্রতিদিন ১ বার (৩-৫ দিন)।", "জ্বর ও ব্যথানাশক: Inj. Meloxicam - ২ মি.লি. IM প্রতিদিন ১ বার (৩ দিন)।", "অ্যান্টিহিস্টামিন: Inj. Pheniramine Maleate - ২ মি.লি. IM প্রতিদিন ১ বার (৩ দিন)।", "সাপোর্ট থেরাপি: প্রচুর ORS স্যালাইন + Zinc Syrup (৫ মি.লি. BD, ৭ দিন)।"], "Prevention": "১ মি.লি. PPR Vaccine চামড়ার নিচে (SC)।", "_id": 0}, {"Name": "২. গোট পক্স (Goat Pox) & নিউমোনিয়া", "Critical": false, "Treatment": ["গোট পক্স অ্যান্টিবায়োটিক: Inj. Ceftriaxone - ২৫০-৫০0 মি.গ্রা. IM (৩-৫ দিন) + ক্ষতস্থানে Povidone Iodine প্রয়োগ।", "নিউমোনিয়া এক্সপেক্টোর্যান্ট: Inj. Bromhexine Hydrochloride (Mentovet) - ২-৩ মি.লি. IM প্রতিদিন ১ বার (৩ দিন)।"], "Prevention": "", "_id": 1}, {"Name": "৩. এন্টারোটক্সেমিয়া (Enterotoxaemia)", "Critical": false, "Treatment": ["অ্যান্টিবায়োটিক: Inj. Oxytetracycline / Penicillin G - ২-৩ মি.লি. IM প্রতিদিন ১ বার (৩ দিন)।", "ডায়রিয়া ও ব্লোট: Trisul/Sulpha-DB (১/৪ বোলাস BD) + Tympanil (১০-১৫ মি.লি. মুখে)।"], "Prevention": "", "_id": 2}, {"Name": "৪. তড়কা (Anthrax) - অতি জরুরি সতর্কতা", "Critical": true, "Treatment": ["চিকিৎসা: Inj. Penicillin G - ৫-১০ মি.লি. IM দিনে ২ বার (৩-৫ দিন)।", "ক্রিটিক্যাল নিয়ম: কোনো অবস্থাতেই পোস্টমর্টেম করা যাবে না। মৃত পশু চুন ও ব্লিচিং পাউডার সহ ৬-৮ ফুট গভীর গর্তে পুঁতে ফেলতে হবে।"], "Prevention": "", "_id": 3}, {"Name": "৫. কৃমিনাশক প্রোটোকল (২০ কেজি ছাগল)", "Critical": false, "Treatment": ["ব্রড স্পেকট্রাম: Levamisole + Triclabendazole (১/৪ বোলাস অথবা ৫-৭ মি.লি. লিকুইড মুখে খালি পেটে)।", "লিভার টনিক: Liver Tonic (Liovet) - ৫ মি.লি. প্রতিদিন ১ বার (৫-৭ দিন)।", "গর্ভবতী ছাগল: Fenbendazole ব্যবহার করা সবচেয়ে নিরাপদ (১/২ এর কম বোলাস)।"], "Prevention": "", "_id": 4}, {"Name": "৬. চর্মরোগ ও ব্লাড প্রোটোজোয়া", "Critical": false, "Treatment": ["স্ক্যাবিস/আঠালি: Inj. Ivermectin - ০.৮ মি.লি. SC (চামড়ার নিচে)। ২১ দিন পর বুস্টার ডোজ।", "ব্লাড প্রোটোজোয়া (লাল প্রস্রাব/জ্বর): Inj. Diminazene Aceturate (Berenil) - ১.৫-২ মি.লি. (গভীর মাংসে) + Inj. Iron Dextran (২-৩ মি.লি.)।"], "Prevention": "", "_id": 5}];
+
+const listEl = document.getElementById('list');
+const searchBox = document.getElementById('searchBox');
+const resultCount = document.getElementById('resultCount');
+const clearSearch = document.getElementById('clearSearch');
+const contentEl = document.getElementById('content');
+const sidebarEl = document.getElementById('sidebar');
+
+let activeId = null;
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function highlight(text, terms){
+  if(!terms.length) return escapeHtml(text);
+  let escaped = escapeHtml(text);
+  terms.forEach(t => {
+    if(!t) return;
+    const re = new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'ig');
+    escaped = escaped.replace(re, '<mark>$1</mark>');
+  });
+  return escaped;
+}
+
+function shortLabel(name){
+  return name.replace(/^[০-৯0-9]+\.\s*/, '');
+}
+
+function renderList(items, terms){
+  if(items.length === 0){
+    listEl.innerHTML = '<div class="no-results">কোনো ফলাফল পাওয়া যায়নি।</div>';
+    return;
+  }
+  listEl.innerHTML = items.map(r => `
+    <button class="med-item${r._id === activeId ? ' active' : ''}${r.Critical ? ' critical' : ''}" data-id="${r._id}">
+      <div class="med-name">${highlight(shortLabel(r.Name), terms)}</div>
+      <div class="med-brand">${r.Critical ? 'জরুরি সতর্কতা' : 'চিকিৎসা প্রোটোকল'}</div>
+    </button>
+  `).join('');
+}
+
+function renderDetail(r){
+  activeId = r._id;
+  const treatmentItems = r.Treatment.map(t => `<li>${escapeHtml(t)}</li>`).join('');
+  const preventionHtml = r.Prevention ? `
+    <div class="section-block prevention">
+      <div class="section-title"><span class="dot">P</span>প্রতিরোধ</div>
+      <p>${escapeHtml(r.Prevention)}</p>
+    </div>
+  ` : '';
+
+  contentEl.innerHTML = `
+    <button class="back-btn" id="backBtn">&larr; তালিকায় ফিরে যান</button>
+    <div class="card${r.Critical ? ' critical' : ''}">
+      <div class="card-eyebrow">${r.Critical ? 'জরুরি' : 'চিকিৎসা'}</div>
+      <h2>${escapeHtml(shortLabel(r.Name))}</h2>
+      ${r.Critical ? '<div class="critical-banner">⚠ অতি জরুরি সতর্কতা</div>' : ''}
+      <div class="sections">
+        <div class="section-block">
+          <div class="section-title"><span class="dot">T</span>চিকিৎসা</div>
+          <ul>${treatmentItems}</ul>
+        </div>
+        ${preventionHtml}
+      </div>
+    </div>
+  `;
+  document.getElementById('backBtn').addEventListener('click', () => {
+    sidebarEl.classList.remove('hidden');
+    contentEl.classList.add('hidden');
+  });
+  applyFilter(searchBox.value, false);
+  contentEl.scrollTop = 0;
+  if(window.innerWidth <= 760){
+    sidebarEl.classList.add('hidden');
+    contentEl.classList.remove('hidden');
+  }
+}
+
+function applyFilter(query, resetScroll){
+  const q = query.trim().toLowerCase();
+  const terms = q.length ? q.split(/\s+/).filter(Boolean) : [];
+  let filtered;
+  if(!q){
+    filtered = DATA;
+  } else {
+    filtered = DATA.filter(r => {
+      const hay = (r.Name + ' ' + r.Treatment.join(' ') + ' ' + r.Prevention).toLowerCase();
+      return terms.every(t => hay.includes(t));
+    });
+  }
+  resultCount.textContent = filtered.length + ' টি বিষয়';
+  clearSearch.style.display = q ? 'inline' : 'none';
+  renderList(filtered, terms);
+  if(resetScroll) listEl.scrollTop = 0;
+}
+
+listEl.addEventListener('click', (e) => {
+  const btn = e.target.closest('.med-item');
+  if(!btn) return;
+  const id = parseInt(btn.dataset.id, 10);
+  const record = DATA.find(r => r._id === id);
+  if(record) renderDetail(record);
+});
+
+searchBox.addEventListener('input', () => applyFilter(searchBox.value, true));
+
+clearSearch.addEventListener('click', () => {
+  searchBox.value = '';
+  applyFilter('', true);
+  searchBox.focus();
+});
+
+document.addEventListener('keydown', (e) => {
+  if(e.key === '/' && document.activeElement !== searchBox){
+    e.preventDefault();
+    searchBox.focus();
+  }
+  if(e.key === 'Escape' && document.activeElement === searchBox){
+    searchBox.value = '';
+    applyFilter('', true);
+  }
+});
+
+applyFilter('', true);
+</script>
+</body>
+</html>

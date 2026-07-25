@@ -1,0 +1,109 @@
+:root { 
+    --primary: #1a5f7a; 
+    --secondary: #159895; 
+    --accent: #eb455f; 
+    --white: #ffffff; 
+}
+
+body { 
+    font-family: 'Hind Siliguri', sans-serif; 
+    background-color: #f4f7f6; 
+    margin: 0; 
+    padding: 0; 
+}
+
+header { 
+    background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+    color: white; 
+    padding: 20px; 
+    text-align: center; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+}
+
+.container { 
+    max-width: 98%; 
+    margin: 10px auto; 
+    background: var(--white); 
+    padding: 15px; 
+    border-radius: 12px; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+}
+
+.controls { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 12px; 
+    margin-bottom: 20px; 
+    background: #eef2f3; 
+    padding: 15px; 
+    border-radius: 8px; 
+    position: sticky; 
+    top: 5px; 
+    z-index: 100; 
+    border: 1px solid #ddd; 
+}
+
+label { 
+    font-weight: 600; 
+    margin-bottom: 5px; 
+    color: var(--primary); 
+    font-size: 14px; 
+}
+
+input { 
+    padding: 12px; 
+    border: 2px solid #ddd; 
+    border-radius: 6px; 
+    font-size: 15px; 
+    width: 90%; 
+}
+
+.table-wrapper { 
+    overflow-x: auto; 
+    border: 1px solid #eee; 
+    border-radius: 8px; 
+    max-height: 800px; 
+    overflow-y: auto; 
+}
+
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    min-width: 1500px; 
+}
+
+th { 
+    background: var(--primary); 
+    color: white; 
+    padding: 12px; 
+    text-align: left; 
+    position: sticky; 
+    top: 0; 
+    z-index: 10; 
+    font-size: 13px; 
+}
+
+td { 
+    padding: 10px; 
+    border-bottom: 1px solid #eee; 
+    font-size: 12.5px; 
+    vertical-align: middle; 
+}
+
+tr:hover { 
+    background-color: #f9f9f9; 
+}
+
+.dose-highlight { 
+    font-weight: bold; 
+    color: #d9534f; 
+    background: #f9f2f2; 
+    padding: 4px 8px; 
+    border-radius: 4px; 
+    border: 1px solid #f2dede; 
+}
+
+.safe-val { color: #28a745; font-weight: bold; }
+.caution-val { color: #007bff; font-weight: bold; }
+.unsafe-val { color: #dc3545; font-weight: bold; }
+.comp-col { color: #555; font-style: italic; font-size: 11px; max-width: 200px; }

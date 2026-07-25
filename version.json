@@ -1,0 +1,7 @@
+{
+  "version": "1.0.1",
+  "buildNumber": 2,
+  "apkUrl": "https://ashifvet.github.io/medicine/app-release.apk",
+  "forceUpdate": true,
+  "releaseNotes": "নতুন ফিচারের বাগ ফিক্স এবং পারফর্মেন্স টিউনিং করা হয়েছে।"
+}

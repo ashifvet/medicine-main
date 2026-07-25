@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>ডাঃ মোঃ আসিফ ইকবাল — প্রোফাইল</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@500;600;700&family=Hind+Siliguri:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#1B4332;
+    --pine-deep:#12301F;
+    --parchment:#F6F1E4;
+    --paper:#FCFAF3;
+    --brass:#A9762F;
+    --brass-light:#C99A4C;
+    --sage:#6B8F71;
+    --sage-pale:#E7EDE1;
+    --ink:#26261F;
+    --ink-soft:#5A5A4F;
+    --hair:#D9D2BE;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--parchment);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(27,67,50,0.06) 1px, transparent 0);
+    background-size:22px 22px;
+    font-family:'Hind Siliguri','IBM Plex Mono',sans-serif;
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+    padding:56px 20px;
+  }
+  .sheet{
+    width:100%;
+    max-width:720px;
+    background:var(--paper);
+    border:1px solid var(--hair);
+    border-radius:2px;
+    box-shadow:0 1px 0 rgba(0,0,0,0.03);
+    position:relative;
+    overflow:hidden;
+  }
+  .sheet::before{
+    content:"";
+    position:absolute;
+    top:0;left:0;right:0;
+    height:8px;
+    background:var(--pine);
+  }
+  .letterhead{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    padding:28px 40px 0;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+  }
+  .letterhead .right{text-align:right;}
+  .header{
+    display:flex;
+    gap:26px;
+    align-items:center;
+    padding:20px 40px 28px;
+    border-bottom:1px solid var(--hair);
+  }
+  .photo-frame{
+    flex:0 0 auto;
+    width:112px;height:112px;
+    border-radius:50%;
+    padding:4px;
+    background:var(--pine);
+    position:relative;
+  }
+  .photo-frame img{
+    width:100%;height:100%;
+    border-radius:50%;
+    object-fit:cover;
+    display:block;
+    border:3px solid var(--paper);
+  }
+  .name-block{flex:1;min-width:0;}
+  .name-block h1{
+    font-family:'Noto Serif Bengali',serif;
+    font-weight:700;
+    font-size:30px;
+    margin:0 0 4px;
+    color:var(--pine-deep);
+    line-height:1.25;
+  }
+  .designation{
+    font-family:'Noto Serif Bengali',serif;
+    font-size:16px;
+    font-weight:500;
+    color:var(--brass);
+    margin:0 0 8px;
+  }
+  .office-line{
+    font-size:14px;
+    color:var(--ink-soft);
+    line-height:1.55;
+    margin:0;
+  }
+  .seal{
+    flex:0 0 auto;
+    width:76px;height:76px;
+    border-radius:50%;
+    border:2px solid var(--brass);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:var(--brass);
+    font-family:'IBM Plex Mono',monospace;
+    position:relative;
+  }
+  .seal::before{
+    content:"";
+    position:absolute;
+    inset:6px;
+    border:1px solid var(--brass-light);
+    border-radius:50%;
+  }
+  .seal .num{font-size:20px;font-weight:600;line-height:1;}
+  .seal .lbl{font-size:8px;letter-spacing:0.08em;margin-top:2px;}
+
+  .body{padding:8px 40px 6px;}
+  .section-title{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--sage);
+    margin:26px 0 12px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .section-title::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--hair);
+  }
+  .rows{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+    border:1px solid var(--hair);
+  }
+  .row{
+    padding:13px 16px;
+    border-bottom:1px solid var(--hair);
+    border-right:1px solid var(--hair);
+  }
+  .row:nth-child(2n){border-right:none;}
+  .row.full{grid-column:1 / -1;border-right:none;}
+  .row .k{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:5px;
+  }
+  .row .v{
+    font-size:15px;
+    color:var(--ink);
+    font-weight:500;
+    word-break:break-word;
+  }
+  .row .v a{color:var(--pine);text-decoration:none;border-bottom:1px solid var(--sage-pale);}
+
+  .badges{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:14px 0 4px;
+  }
+  .badge{
+    background:var(--sage-pale);
+    color:var(--pine-deep);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    padding:6px 12px;
+    border-radius:20px;
+    border:1px solid var(--hair);
+  }
+
+  .footer{
+    margin-top:30px;
+    padding:18px 40px 26px;
+    border-top:1px solid var(--hair);
+    font-size:12px;
+    color:var(--ink-soft);
+    line-height:1.7;
+  }
+  .footer a{color:var(--pine);}
+  .footer .stamp-line{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.04em;
+    color:var(--sage);
+    margin-top:8px;
+  }
+
+  @media (max-width:520px){
+    body{padding:20px 12px;}
+    .letterhead{flex-direction:column;gap:4px;padding:22px 22px 0;}
+    .header{flex-direction:column;text-align:center;padding:22px 22px 24px;}
+    .rows{grid-template-columns:1fr;}
+    .row{border-right:none !important;}
+    .body{padding:6px 22px;}
+    .footer{padding:16px 22px 22px;}
+    .seal{display:none;}
+  }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="letterhead">
+      <div>উপজেলা প্রাণিসম্পদ দপ্তর ও ভেটেরিনারি হাসপাতাল<br>মহেশপুর, ঝিনাইদহ</div>
+      <div class="right">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার<br>প্রাণিসম্পদ অধিদপ্তর</div>
+    </div>
+
+    <div class="header">
+      <div class="photo-frame">
+        <img src="https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-dls-moheshpur-jhenaidah/2026/4/01214e60-5694-42a5-8fc0-495a560e6260.jpg" alt="ডাঃ মোঃ আসিফ ইকবাল">
+      </div>
+      <div class="name-block">
+        <h1>ডাঃ মোঃ আসিফ ইকবাল</h1>
+        <p class="designation">ভেটেরিনারি সার্জন</p>
+        <p class="office-line">উপজেলা প্রাণিসম্পদ দপ্তর ও ভেটেরিনারি হাসপাতাল, মহেশপুর, ঝিনাইদহ</p>
+      </div>
+      <div class="seal">
+        <div>
+          <div class="num">৪৪</div>
+          <div class="lbl">বিসিএস ব্যাচ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="section-title">যোগাযোগ</div>
+      <div class="rows">
+        <div class="row"><div class="k">ইমেইল</div><div class="v"><a href="mailto:ashifdvm@gmail.com">ashifdvm@gmail.com</a></div></div>
+        <div class="row"><div class="k">মোবাইল</div><div class="v">০১৭১১৯৮৯২৩৬</div></div>
+        <div class="row"><div class="k">ফোন (অফিস)</div><div class="v">০১৩২৪২৮৯৬৭৯</div></div>
+        <div class="row"><div class="k">নিজ জেলা</div><div class="v">কুষ্টিয়া</div></div>
+      </div>
+
+      <div class="section-title">চাকরি সংক্রান্ত তথ্য</div>
+      <div class="rows">
+        <div class="row"><div class="k">পদবি</div><div class="v">ভেটেরিনারি সার্জন</div></div>
+        <div class="row"><div class="k">বিসিএস ব্যাচ</div><div class="v">৪৪তম</div></div>
+        <div class="row"><div class="k">যোগদানের তারিখ</div><div class="v">০১ মার্চ, ২০২৬</div></div>
+        <div class="row full"><div class="k">কর্মস্থল</div><div class="v">উপজেলা প্রাণিসম্পদ দপ্তর ও ভেটেরিনারি হাসপাতাল, মহেশপুর, ঝিনাইদহ।</div></div>
+      </div>
+
+      <div class="badges">
+        <span class="badge">ভেটেরিনারি সার্জন</span>
+        <span class="badge">বিসিএস ৪৪তম ব্যাচ</span>
+        <span class="badge">মহেশপুর, ঝিনাইদহ</span>
+      </div>
+    </div>
+
+    <div class="footer">
+      তথ্যসূত্র: <a href="https://dls.moheshpur.jhenaidah.gov.bd/pages/officers" target="_blank" rel="noopener">উপজেলা প্রাণিসম্পদ দপ্তর, মহেশপুর — কর্মকর্তাবৃন্দ</a>, বাংলাদেশ জাতীয় তথ্য বাতায়ন।
+      <div class="stamp-line">সর্বশেষ হালনাগাদ: ০৫ মে, ২০২৬</div>
+    </div>
+  </div>
+</body>
+</html>

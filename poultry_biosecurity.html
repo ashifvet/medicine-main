@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bio-security Management in Poultry Farms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --barn:#5c1f1a;
+    --barn-dark:#3d1512;
+    --coop-green:#1f3d2b;
+    --coop-green-dark:#132819;
+    --wheat:#c99a2e;
+    --wheat-light:#e8c568;
+    --cream:#f6f1e4;
+    --paper:#fffcf5;
+    --ink:#2a231a;
+    --ink-soft:#5c5346;
+    --line:#e2d8c0;
+    --danger:#a63d2f;
+    --good:#3d6b3f;
+    --radius:10px;
+    --shadow: 0 4px 18px rgba(42,35,26,0.08);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Karla',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.6;
+  }
+  h1,h2,h3,h4{
+    font-family:'Zilla Slab',serif;
+    color:var(--coop-green-dark);
+    line-height:1.15;
+    margin:0 0 .5em 0;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- Layout ---------- */
+  .app{
+    display:grid;
+    grid-template-columns: 280px 1fr;
+    min-height:100vh;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    background: linear-gradient(180deg, var(--coop-green) 0%, var(--coop-green-dark) 100%);
+    color:#e9e4d2;
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+    padding:28px 0 40px;
+    border-right:6px solid var(--wheat);
+  }
+  .sidebar::-webkit-scrollbar{width:6px;}
+  .sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:4px;}
+
+  .brand{
+    padding:0 24px 22px;
+    border-bottom:1px solid rgba(255,255,255,0.12);
+    margin-bottom:18px;
+  }
+  .brand .tag{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--wheat-light);
+    background:rgba(201,154,46,0.15);
+    border:1px solid rgba(201,154,46,0.4);
+    padding:3px 8px;
+    border-radius:20px;
+    margin-bottom:12px;
+  }
+  .brand h1{
+    color:#fbf8ee;
+    font-size:1.45rem;
+    margin:0;
+  }
+  .brand p{
+    margin:6px 0 0;
+    font-size:.82rem;
+    color:#b9c4b3;
+  }
+
+  nav.toc{padding:0 12px;}
+  nav.toc .group-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--wheat-light);
+    padding:16px 12px 6px;
+    opacity:.85;
+  }
+  nav.toc ul{list-style:none;margin:0;padding:0;}
+  nav.toc a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+    color:#dbe3d5;
+    font-size:.9rem;
+    padding:8px 12px;
+    border-radius:8px;
+    transition:background .15s ease, color .15s ease, padding-left .15s ease;
+  }
+  nav.toc a .num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--wheat-light);
+    min-width:20px;
+  }
+  nav.toc a:hover{
+    background:rgba(255,255,255,0.08);
+    color:#fff;
+    padding-left:16px;
+  }
+  nav.toc a.active{
+    background:rgba(201,154,46,0.22);
+    color:#fff;
+    border-left:3px solid var(--wheat);
+    padding-left:13px;
+    font-weight:600;
+  }
+
+  /* ---------- Hamburger (mobile) ---------- */
+  .menu-toggle{
+    display:none;
+    position:fixed;
+    top:16px;
+    left:16px;
+    z-index:200;
+    background:var(--coop-green-dark);
+    color:#fff;
+    border:none;
+    width:44px;
+    height:44px;
+    border-radius:10px;
+    box-shadow:var(--shadow);
+    font-size:20px;
+    cursor:pointer;
+  }
+  .scrim{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(20,15,10,0.45);
+    z-index:99;
+  }
+
+  /* ---------- Main content ---------- */
+  main{
+    padding:56px 64px 100px;
+    max-width:980px;
+  }
+
+  .hero{
+    background: radial-gradient(circle at 85% 10%, rgba(201,154,46,0.18), transparent 55%), var(--paper);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:44px 40px;
+    margin-bottom:52px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    right:-40px; top:-40px;
+    width:180px; height:180px;
+    background:var(--wheat);
+    opacity:.12;
+    border-radius:50%;
+  }
+  .hero .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--barn);
+    margin-bottom:10px;
+  }
+  .hero h1{
+    font-size:2.6rem;
+    max-width:640px;
+  }
+  .hero p.lead{
+    font-size:1.08rem;
+    color:var(--ink-soft);
+    max-width:600px;
+    margin-top:14px;
+  }
+  .hero .triad{
+    display:flex;
+    gap:14px;
+    margin-top:28px;
+    flex-wrap:wrap;
+  }
+  .triad-item{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 16px;
+    font-size:.85rem;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    min-width:150px;
+  }
+  .triad-item .dot{
+    width:10px;height:10px;border-radius:50%;flex:none;
+  }
+
+  section{
+    margin-bottom:56px;
+    scroll-margin-top:24px;
+  }
+  section .kicker{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--wheat);
+    background:var(--coop-green-dark);
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:20px;
+    margin-bottom:10px;
+  }
+  section h2{
+    font-size:1.75rem;
+    border-bottom:3px solid var(--wheat);
+    display:inline-block;
+    padding-bottom:6px;
+    margin-bottom:20px;
+  }
+  section h3{
+    font-size:1.15rem;
+    color:var(--barn);
+    margin-top:26px;
+  }
+
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+    gap:16px;
+    margin-top:18px;
+  }
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+    box-shadow:var(--shadow);
+  }
+  .card h4{
+    font-size:1rem;
+    color:var(--coop-green);
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .card ul{margin:0;padding-left:18px;}
+  .card p{margin:0;color:var(--ink-soft);font-size:.92rem;}
+
+  ul.check{list-style:none;margin:0;padding:0;}
+  ul.check li{
+    display:flex;
+    gap:10px;
+    padding:7px 0;
+    border-bottom:1px dashed var(--line);
+    font-size:.95rem;
+  }
+  ul.check li:last-child{border-bottom:none;}
+  ul.check li::before{
+    content:"✓";
+    color:var(--good);
+    font-weight:700;
+    flex:none;
+  }
+
+  .spec-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:16px;
+    background:var(--paper);
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  .spec-table th, .spec-table td{
+    padding:11px 16px;
+    text-align:left;
+    border-bottom:1px solid var(--line);
+    font-size:.92rem;
+  }
+  .spec-table th{
+    background:var(--coop-green);
+    color:#fff;
+    font-family:'Zilla Slab',serif;
+    font-weight:600;
+    letter-spacing:.02em;
+  }
+  .spec-table tr:nth-child(even) td{background:#fbf7ec;}
+  .spec-table tr:last-child td{border-bottom:none;}
+
+  .callout{
+    border-left:4px solid var(--wheat);
+    background:#fbf3dd;
+    padding:14px 18px;
+    border-radius:0 8px 8px 0;
+    font-size:.93rem;
+    margin-top:16px;
+  }
+  .callout.warn{border-left-color:var(--danger); background:#fbeae7;}
+  .callout.good{border-left-color:var(--good); background:#eaf3ea;}
+  .callout strong{color:var(--barn);}
+
+  .steps{
+    counter-reset:step;
+    margin-top:20px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .step{
+    display:grid;
+    grid-template-columns:44px 1fr;
+    gap:16px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    box-shadow:var(--shadow);
+  }
+  .step .step-num{
+    counter-increment:step;
+    font-family:'Zilla Slab',serif;
+    font-weight:700;
+    font-size:1.3rem;
+    color:var(--wheat);
+    background:var(--coop-green-dark);
+    width:44px;height:44px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .step .step-num::before{content: counter(step);}
+  .step h4{margin:0 0 4px;font-size:1rem;color:var(--coop-green-dark);}
+  .step p{margin:0;color:var(--ink-soft);font-size:.92rem;}
+
+  .pill-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+  .pill{
+    background:var(--coop-green-dark);
+    color:#fff;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:.82rem;
+    font-family:'JetBrains Mono',monospace;
+  }
+
+  .zone-diagram{
+    display:flex;
+    justify-content:center;
+    margin:24px 0;
+  }
+
+  .stat-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-top:18px;
+  }
+  .stat-box{
+    background:var(--coop-green-dark);
+    color:#fff;
+    border-radius:var(--radius);
+    padding:18px 14px;
+    text-align:center;
+  }
+  .stat-box .val{font-family:'Zilla Slab',serif;font-size:1.7rem;color:var(--wheat-light);}
+  .stat-box .label{font-size:.78rem;color:#c9d4c1;margin-top:4px;}
+
+  footer{
+    padding:30px 64px 60px;
+    color:var(--ink-soft);
+    font-size:.82rem;
+    border-top:1px solid var(--line);
+    max-width:980px;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px){
+    .app{grid-template-columns:1fr;}
+    .sidebar{
+      position:fixed;
+      left:0; top:0;
+      width:280px;
+      transform:translateX(-100%);
+      transition:transform .25s ease;
+      z-index:150;
+      box-shadow:8px 0 30px rgba(0,0,0,0.25);
+    }
+    .sidebar.open{transform:translateX(0);}
+    .scrim.show{display:block;}
+    .menu-toggle{display:block;}
+    main{padding:90px 22px 80px;}
+    .hero{padding:30px 22px;}
+    .hero h1{font-size:1.9rem;}
+    footer{padding:20px 22px 50px;}
+    .stat-strip{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width: 500px){
+    .card-grid{grid-template-columns:1fr;}
+    .step{grid-template-columns:36px 1fr;}
+    .step .step-num{width:36px;height:36px;font-size:1rem;}
+  }
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+<div class="scrim" id="scrim"></div>
+
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="tag">Farm Reference Guide</span>
+      <h1>Bio-security<br>in Poultry Farms</h1>
+      <p>Housing, hygiene &amp; disinfection protocol</p>
+    </div>
+
+    <nav class="toc">
+      <div class="group-label">Foundations</div>
+      <ul>
+        <li><a href="#overview"><span class="num">01</span>Overview</a></li>
+        <li><a href="#principles"><span class="num">02</span>Biosecurity Principles</a></li>
+        <li><a href="#zones"><span class="num">03</span>Zones &amp; Measures</a></li>
+        <li><a href="#challenges"><span class="num">04</span>Challenges &amp; Benefits</a></li>
+      </ul>
+
+      <div class="group-label">Building the Farm</div>
+      <ul>
+        <li><a href="#land"><span class="num">05</span>Site Selection</a></li>
+        <li><a href="#housing"><span class="num">06</span>Shed Design</a></li>
+        <li><a href="#infra"><span class="num">07</span>Infrastructure</a></li>
+        <li><a href="#equipment"><span class="num">08</span>Essential Equipment</a></li>
+      </ul>
+
+      <div class="group-label">Operating the Farm</div>
+      <ul>
+        <li><a href="#cycle"><span class="num">09</span>Farming Cycle</a></li>
+        <li><a href="#clean-basics"><span class="num">10</span>Cleaning &amp; Disinfection 101</a></li>
+        <li><a href="#efficacy"><span class="num">11</span>Disinfection Efficacy</a></li>
+        <li><a href="#process"><span class="num">12</span>Shed Cleaning Process</a></li>
+        <li><a href="#tables"><span class="num">13</span>Reference Tables</a></li>
+        <li><a href="#checklist"><span class="num">14</span>Guard &amp; Checklist</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main>
+
+    <section id="overview">
+      <div class="hero">
+        <div class="eyebrow">Poultry Production · Field Reference</div>
+        <h1>Bio-security Management in Poultry Farms</h1>
+        <p class="lead">A working guide to housing design, farm infrastructure, essential equipment and the cleaning &amp; disinfection protocol behind a healthy, productive flock.</p>
+        <div class="triad">
+          <div class="triad-item"><span class="dot" style="background:var(--barn)"></span>Feed</div>
+          <div class="triad-item"><span class="dot" style="background:var(--coop-green)"></span>Management</div>
+          <div class="triad-item"><span class="dot" style="background:var(--wheat)"></span>Chicks</div>
+        </div>
+        <div class="callout good" style="margin-top:22px;">
+          <strong>Successful broiler farming</strong> rests on three pillars working together — quality feed, disciplined management, and healthy day-old chicks. Bio-security is the thread that protects all three.
+        </div>
+      </div>
+
+      <h2>Basic Points Covered</h2>
+      <div class="card-grid">
+        <div class="card"><h4>🏗️ Establishment</h4><p>Site selection and shed construction fundamentals.</p></div>
+        <div class="card"><h4>🧰 House Equipment</h4><p>Feeders, drinkers, brooders, lighting and tools.</p></div>
+        <div class="card"><h4>🛡️ Bio-security &amp; Disinfection</h4><p>Principles, zones, and disinfectant science.</p></div>
+        <div class="card"><h4>🧼 Shed Preparation</h4><p>Step-by-step cleaning between flocks.</p></div>
+      </div>
+    </section>
+
+    <section id="principles">
+      <span class="kicker">Section 02</span>
+      <h2>Biosecurity Principles</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h4>🚧 Exclusion</h4>
+          <p>Preventing pathogens from entering the farm in the first place.</p>
+        </div>
+        <div class="card">
+          <h4>🔒 Containment</h4>
+          <p>Preventing the spread of pathogens within the farm once present.</p>
+        </div>
+        <div class="card">
+          <h4>🧪 Elimination</h4>
+          <p>Removing pathogens already present from the environment.</p>
+        </div>
+      </div>
+
+      <h3>Key Components of Biosecurity</h3>
+      <div class="card-grid">
+        <div class="card"><h4>1. Farm Location &amp; Design</h4><ul><li>Distance from other farms</li><li>Controlled access points</li></ul></div>
+        <div class="card"><h4>2. Hygiene &amp; Sanitation</h4><ul><li>Cleaning &amp; disinfection protocols</li><li>Footbaths &amp; handwashing stations</li></ul></div>
+        <div class="card"><h4>3. Animal Health Management</h4><ul><li>Regular vaccinations</li><li>Monitoring flock health</li></ul></div>
+        <div class="card"><h4>4. Feed &amp; Water Safety</h4><ul><li>Prevent contamination</li><li>Use quality feed</li></ul></div>
+        <div class="card"><h4>5. Pest &amp; Wild Bird Control</h4><ul><li>Rodent-proof buildings</li><li>Netting to keep wild birds out</li></ul></div>
+        <div class="card"><h4>6. Farm Staff &amp; Visitors</h4><ul><li>Restricted access</li><li>Use of PPE</li></ul></div>
+      </div>
+    </section>
+
+    <section id="zones">
+      <span class="kicker">Section 03</span>
+      <h2>Biosecurity Zones &amp; Measures</h2>
+
+      <div class="zone-diagram">
+        <svg width="440" height="230" viewBox="0 0 440 230" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="220" cy="115" rx="215" ry="105" fill="#eaf3ea" stroke="#3d6b3f" stroke-width="2" stroke-dasharray="6 5"/>
+          <ellipse cx="220" cy="115" rx="130" ry="70" fill="#fbf3dd" stroke="#c99a2e" stroke-width="2" stroke-dasharray="6 5"/>
+          <ellipse cx="220" cy="115" rx="55" ry="34" fill="#5c1f1a"/>
+          <text x="220" y="112" text-anchor="middle" fill="#fff" font-family="Zilla Slab, serif" font-size="13" font-weight="600">RAZ</text>
+          <text x="220" y="128" text-anchor="middle" fill="#f0c6bb" font-family="JetBrains Mono, monospace" font-size="9">poultry house</text>
+          <text x="220" y="60" text-anchor="middle" fill="#8a6d1c" font-family="Zilla Slab, serif" font-size="13" font-weight="600">Controlled Access Zone (CAZ)</text>
+          <text x="220" y="26" text-anchor="middle" fill="#2c4a30" font-family="Zilla Slab, serif" font-size="13" font-weight="600">External environment</text>
+        </svg>
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <h4>Controlled Access Zone (CAZ)</h4>
+          <p>Separates the farm from the external environment — the first checkpoint for people, vehicles and materials.</p>
+        </div>
+        <div class="card">
+          <h4>Restricted Access Zone (RAZ)</h4>
+          <p>Core areas such as the poultry houses themselves — access limited to essential, PPE-equipped staff.</p>
+        </div>
+      </div>
+
+      <h3>Emergency Preparedness</h3>
+      <ul class="check">
+        <li>Early detection of diseases</li>
+        <li>Quarantine procedures</li>
+        <li>Reporting to veterinary authorities</li>
+        <li>A documented action plan for disease outbreaks</li>
+      </ul>
+
+      <h3>The Disease Triangle</h3>
+      <p style="color:var(--ink-soft);max-width:640px;">Disease emerges only when <strong>Host</strong>, <strong>Pathogen</strong> and <strong>Environment</strong> intersect. Bio-security works by breaking that intersection — remaining the cheapest and most effective means of disease control available.</p>
+      <div class="pill-row">
+        <span class="pill">Host</span>
+        <span class="pill">Pathogen (agent)</span>
+        <span class="pill">Environment — birds, food, water, soil, insects, equipment, people</span>
+      </div>
+    </section>
+
+    <section id="challenges">
+      <span class="kicker">Section 04</span>
+      <h2>Challenges &amp; Benefits</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h4 style="color:var(--danger)">⚠️ Challenges</h4>
+          <ul>
+            <li>Lack of awareness or training</li>
+            <li>Cost of implementation</li>
+            <li>Difficulty controlling external factors — wildlife, climate</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4 style="color:var(--good)">✔ Benefits</h4>
+          <ul>
+            <li>Improved poultry health &amp; productivity</li>
+            <li>Reduced dependency on antibiotics</li>
+            <li>Enhanced profitability</li>
+            <li>Contribution to public health</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="land">
+      <span class="kicker">Section 05</span>
+      <h2>Site Selection — The Land</h2>
+      <ul class="check">
+        <li>Elevated land with good drainage facility</li>
+        <li>Open space &amp; good air ventilation</li>
+        <li>Presence of underground drinking water &amp; sufficient sunlight</li>
+        <li>Good road facility for easy transportation</li>
+        <li>Water quality: hardness &lt; 250 ppm, pH 6.0–7.0</li>
+        <li>Availability of electricity</li>
+        <li>Easy availability of manpower</li>
+      </ul>
+    </section>
+
+    <section id="housing">
+      <span class="kicker">Section 06</span>
+      <h2>Shed Design</h2>
+
+      <h3>The Farm — Broiler</h3>
+      <table class="spec-table">
+        <tr><th>Specification</th><th>Value</th></tr>
+        <tr><td>Orientation</td><td>East–West direction, lengthwise</td></tr>
+        <tr><td>Elevation</td><td>At least 1 ft above ground level</td></tr>
+        <tr><td>Breadth</td><td>20–22 ft</td></tr>
+        <tr><td>Length</td><td>Less than 250 ft</td></tr>
+        <tr><td>Side wall (litter guard)</td><td>6 inches</td></tr>
+        <tr><td>Wire mesh height</td><td>Greater than 6 ft</td></tr>
+        <tr><td>Center height</td><td>12 ft</td></tr>
+        <tr><td>Thatch distance from sides</td><td>2 ft</td></tr>
+      </table>
+      <div class="callout good">
+        <strong>Rules of thumb:</strong> breadth should be less than 3× net height, and the gap between two sheds should be 1.5× the shed breadth.
+      </div>
+
+      <h3>The Farm — Layer</h3>
+      <p style="color:var(--ink-soft)">A three-level layer cage holds 4 boxes per side per level (12 boxes total, both sides), 3 birds per box — <strong>72 chickens per unit cage</strong>.</p>
+      <table class="spec-table">
+        <tr><th>Dimension</th><th>Value</th></tr>
+        <tr><td>Cage unit (L×W×H)</td><td>1.5 ft × 1 ft × 1.5 ft</td></tr>
+        <tr><td>Bottom-tier tray to egg tray</td><td>7 ft 10 in</td></tr>
+        <tr><td>Leg-to-leg (bottom tier)</td><td>6 ft 6 in</td></tr>
+        <tr><td>Length per unit</td><td>6 ft 2 in</td></tr>
+      </table>
+      <div class="callout">
+        <strong>Sizing example — 1,000 layers:</strong> Width ≈ 25 ft (walking space + two cage rows + middle aisle). Length: 14 cage units needed → 7 per row × 6 ft 2 in ≈ 43 ft 2 in, plus 3 ft walking space each side ≈ 50 ft total. <span class="mono">Total house size ≈ 50 × 25 ft = 1,250 sq ft</span> for cage and walking space alone.
+      </div>
+
+      <h3>Floor &amp; Roof</h3>
+      <div class="card-grid">
+        <div class="card"><h4>Floor</h4><ul><li>Mud, elevated — for dry areas</li><li>Rough cemented concrete — for damp areas</li></ul></div>
+        <div class="card"><h4>Roof</h4><ul><li>Tin</li><li>Cemented tin</li><li>Tiles</li><li>Thatching (paddy/wheat straw or jute stick)</li></ul></div>
+      </div>
+    </section>
+
+    <section id="infra">
+      <span class="kicker">Section 07</span>
+      <h2>Farm Infrastructure</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h4>💧 Footbath</h4>
+          <p>Compulsory at the entrance of every shed.</p>
+          <p class="mono" style="margin-top:8px;">5 g KMnO₄ per 1 L water</p>
+        </div>
+        <div class="card">
+          <h4>🛢️ Water Tank</h4>
+          <p>Two tanks required: an inner tank for medication (500 L per 1,000 sq ft), plus a larger outer main tank serving all sheds.</p>
+        </div>
+        <div class="card">
+          <h4>🌾 Feed Room</h4>
+          <p>A separate room near the shed with proper feed-stacking arrangement.</p>
+        </div>
+        <div class="card">
+          <h4>⚫ Death Pit</h4>
+          <p>A dedicated provision at one corner of the farm for disposing of dead birds.</p>
+        </div>
+      </div>
+      <div class="callout">Keep at least <strong>10 ft around every shed</strong> clean and clear at all times.</div>
+    </section>
+
+    <section id="equipment">
+      <span class="kicker">Section 08</span>
+      <h2>Essential Equipment</h2>
+      <table class="spec-table">
+        <tr><th>Equipment</th><th>Ratio / Spec</th></tr>
+        <tr><td>Auto feeders (cone &amp; grill) + chick feeder tray</td><td>1 per 50 chicks</td></tr>
+        <tr><td>Chick drinkers</td><td>1 per 50 chicks</td></tr>
+        <tr><td>Auto (bell) drinkers</td><td>1 per 50 chicks</td></tr>
+        <tr><td>Thermometer</td><td>1 per shed</td></tr>
+        <tr><td>Electric brooder</td><td>1 per 300–400 chicks</td></tr>
+        <tr><td>Gas brooder</td><td>1 per 700 chicks</td></tr>
+        <tr><td>Coal brooder (koila)</td><td>1 per 300 chicks</td></tr>
+        <tr><td>Heat bulb (winter)</td><td>2 watt / bird — same wattage across all brooders</td></tr>
+        <tr><td>LED lighting</td><td>1 × 12 W lamp per 400 chicks</td></tr>
+      </table>
+      <div class="pill-row">
+        <span class="pill">Flame gun</span>
+        <span class="pill">Weighing scale</span>
+        <span class="pill">Raking machine</span>
+      </div>
+    </section>
+
+    <section id="cycle">
+      <span class="kicker">Section 09</span>
+      <h2>The Farming Cycle</h2>
+      <p style="color:var(--ink-soft);max-width:600px;">Shed preparation isn't a one-off task — it's a recurring quarter of the whole production cycle, repeating with every new flock.</p>
+      <div class="stat-strip">
+        <div class="stat-box"><div class="val">25%</div><div class="label">Shed preparation</div></div>
+        <div class="stat-box"><div class="val">50%</div><div class="label">Brooding</div></div>
+        <div class="stat-box"><div class="val">10%</div><div class="label">Growing</div></div>
+        <div class="stat-box"><div class="val">15%</div><div class="label">Finishing</div></div>
+      </div>
+    </section>
+
+    <section id="clean-basics">
+      <span class="kicker">Section 10</span>
+      <h2>Cleaning &amp; Disinfection — The Basics</h2>
+      <div class="card-grid">
+        <div class="card"><h4>Cleaning</h4><p>Removal of unwanted material ("soils") from production equipment and production areas.</p></div>
+        <div class="card"><h4>Sanitizing</h4><p>Treatment of a clean surface with a chemical or physical agent (e.g. heat) to reduce microorganisms to safe levels.</p></div>
+        <div class="card"><h4>Disinfection</h4><p>Reduces the number of organisms present to a level where they no longer threaten health — usually does not kill spores.</p></div>
+        <div class="card"><h4>Sterilisation</h4><p><em>Scientific:</em> kills all organism types, probability only 1 remains from a starting count of 1,000,000,000.<br><em>Practical:</em> kills all organisms present, including spores.</p></div>
+      </div>
+
+      <h3>Biofilm — The Hidden Threat</h3>
+      <p style="max-width:640px;color:var(--ink-soft)">Incomplete cleaning, sanitation or disinfection encourages biofilm to develop — a protective mass that traps nutrients and bacteria, becoming an ongoing source of contamination from surfaces that look clean. Both pathogenic and spoilage microbes can form a biofilm, and it must be physically removed before disinfection will work.</p>
+      <div class="callout warn"><strong>Bacterial attachment → protective slime film → traps nutrients &amp; bacteria.</strong> This prevents anti-microbial action — effective cleaning is required first.</div>
+    </section>
+
+    <section id="efficacy">
+      <span class="kicker">Section 11</span>
+      <h2>What Affects Disinfection Efficacy</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h4>Concentration</h4>
+          <p>Use the recommended concentration. Too high → wasted cost. Too low → resistant strains of microorganisms develop.</p>
+        </div>
+        <div class="card">
+          <h4>Formulation</h4>
+          <p>Two products with identical active-ingredient concentration can still differ in efficacy due to other formulation components.</p>
+        </div>
+        <div class="card">
+          <h4>Contact time</h4>
+          <p>No disinfectant works instantaneously. The validated contact time is on the product label — if it needs more than 30 minutes, it's a weak disinfectant.</p>
+        </div>
+        <div class="card">
+          <h4>Temperature</h4>
+          <p>Higher temperature increases disinfectant efficacy and colloidal movement. Note: iodine/chlorine/iodophor become ineffective above 46°C.</p>
+        </div>
+        <div class="card">
+          <h4>Relative humidity</h4>
+          <p>Affects penetration into dried material. Formalin, for example, needs RH ≈ 70% to be efficient.</p>
+        </div>
+        <div class="card">
+          <h4>Application method</h4>
+          <p>Amount delivered to the target depends on method — apply by gentle spraying to increase contact time.</p>
+        </div>
+        <div class="card">
+          <h4>Biofilm presence</h4>
+          <p>Must be removed before disinfection — otherwise it shields organisms from the disinfectant entirely.</p>
+        </div>
+        <div class="card">
+          <h4>Pre-cleaning</h4>
+          <p>A critical step for efficacy. The pre-cleaner must be compatible with the disinfectant, applied with high-pressure hot water (≥ 40 psi).</p>
+        </div>
+      </div>
+
+      <h3>Target Organism Resistance (low → high)</h3>
+      <p style="color:var(--ink-soft);max-width:640px">Pathogens carry different degrees of resistance to germicides:</p>
+      <div class="pill-row">
+        <span class="pill">1. Bacterial spores</span>
+        <span class="pill">2. Non-enveloped viruses (IBD, chicken anemia)</span>
+        <span class="pill">3. Mycobacteria</span>
+        <span class="pill">4. Fungi</span>
+        <span class="pill">5. Enveloped viruses (AI, NDV)</span>
+        <span class="pill">6. Vegetative bacteria</span>
+      </div>
+
+      <h3>Never Mix These Disinfectants</h3>
+      <div class="callout warn">
+        <strong>Chlorine + peroxide</strong> → loses activity. <strong>Iodophores + soaps</strong> → loses activity. Give each disinfectant its own contact time, then allow 1 day of rest before applying another.
+      </div>
+
+      <h3>Water &amp; Disinfectant Quantities</h3>
+      <table class="spec-table">
+        <tr><th>Purpose</th><th>Quantity</th></tr>
+        <tr><td>Effective disinfection (normal)</td><td>300 ml diluted disinfectant / m²</td></tr>
+        <tr><td>Disinfection during outbreak (ND, AI, Gumboro)</td><td>500 ml diluted disinfectant / m²</td></tr>
+        <tr><td>Cleaning operation</td><td>500 ml water / m²</td></tr>
+      </table>
+
+      <h3>Criteria of the Ideal Disinfectant</h3>
+      <div class="card-grid">
+        <div class="card">
+          <h4>Effective disinfectant is:</h4>
+          <ul><li>A powerful poison</li><li>Toxic</li></ul>
+        </div>
+        <div class="card">
+          <h4>Safe disinfectant is:</h4>
+          <ul><li>Non-poisonous</li><li>Relatively poor at killing micro-organisms</li></ul>
+        </div>
+      </div>
+      <p style="color:var(--ink-soft);font-size:.9rem;max-width:600px">The tension between the two is exactly why concentration, contact time and application method all matter so much in practice.</p>
+    </section>
+
+    <section id="process">
+      <span class="kicker">Section 12</span>
+      <h2>Shed Cleaning Process</h2>
+      <p style="color:var(--ink-soft);max-width:600px">Shed cleaning combines <strong>dry cleaning</strong> and <strong>wet cleaning</strong> into one complete turnaround protocol between flocks.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div>
+            <h4>Pre-cleaning procedures</h4>
+            <p>Allow a 2-week down time for clean-up and preparation for the next flock. Keep the electric current supply off before beginning the cleaning process.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div>
+            <h4>Dry washing</h4>
+            <p>After bird lifting, empty feeders and disconnect drinkers, removing them outside the shed — litter remains as usual for now.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div>
+            <h4>Pre-spray</h4>
+            <p>Using a low-pressure sprayer, spray a detergent solution from ceiling to floor to dampen down dust before litter and equipment are removed. Close curtains first in open-sided houses.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div>
+            <h4>Top-to-bottom sweep</h4>
+            <p>Clean side walls, wire net, ceiling, beams and supports with a broomstick and hard brush so all cobwebs, dust and dirt fall onto the litter before removal. Always clean top to bottom.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div>
+            <h4>Litter treatment &amp; removal</h4>
+            <p>Scrape litter into small heaps, spray with a good terminal disinfectant, and leave for 24 hours. Then remove old litter and manure completely for sale, or dispose at least 500 ft from the farm, opposite the wind direction. Collect and burn feathers and other waste in and around the farm.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div>
+            <h4>Flame gun treatment</h4>
+            <p>Use direct flame for pathogen elimination, especially after heavy mortality or infection in the previous batch. The intense heat sanitizes floors, walls and equipment, reaching nooks and crannies manual cleaning misses.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div>
+            <h4>Repair &amp; floor renewal</h4>
+            <p>Watch for holes, cracks and crevices and repair them. For soiled floors, remove the top ½ inch of soil and replace with new soil, cow dung and red soil (where available) to prepare a plain floor area.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div>
+            <h4>Insecticide spray</h4>
+            <p>While the house is still warm after bird removal, spray equipment and all surfaces with insecticide so pests have no chance to migrate.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div>
+            <h4>Wet washing</h4>
+            <p>Jet spray of water across all surfaces to complete the physical clean before disinfection begins.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div>
+            <h4>White wash / painting</h4>
+            <p>Apply to all sidewalls, floors, pillars and outside surfaces.</p>
+            <div class="callout" style="margin-top:10px;">
+              <strong>Formula for 500 sq ft:</strong> Liquid lime 1.5 kg + Bleaching powder 250 g + Water 5 L + Copper sulphate 100 g + Kerosene 150 ml → rest 24 hours → next day add 250 ml formalin → followed by white wash.
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div>
+            <h4>Dry &amp; close</h4>
+            <p>Dry the shed in sunlight, then keep it closed with curtains on both sides.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Cleaning Individual Systems</h3>
+      <div class="card-grid">
+        <div class="card">
+          <h4>🥤 Equipment</h4>
+          <p>Use detergents throughout. Remove scale in drinkers with 31% HCl. Remove all fittings — drinkers, feeders, fences — to the external concrete area; raise automatic feeders and nipple drinkers during cleaning, then leave exposed to sun.</p>
+        </div>
+        <div class="card">
+          <h4>🛢️ Overhead tank</h4>
+          <p>Scrub to remove slime and algae → wash with flowing water → fill with 0.5% bleaching powder solution and hold overnight → flush with plain water.</p>
+        </div>
+        <div class="card">
+          <h4>🚿 Pipeline</h4>
+          <p>Fill the whole pipeline with 5% H₂O₂, hold for 6 hours, then flush with fresh water — this clears biofilm blockages along the drink system.</p>
+        </div>
+        <div class="card">
+          <h4>🎪 Curtains</h4>
+          <p>Day 1: thorough clean with plain water. Day 2: soak in 2% formalin water for 12–24 hours. Then sun-dry.</p>
+        </div>
+        <div class="card">
+          <h4>🌾 Feeding system</h4>
+          <p>Scrape and scrub to completely remove old feed. Remove the feed-bin boot and clean out remaining feed. Follow a soaking → foaming → rinsing sequence.</p>
+        </div>
+      </div>
+
+      <h3>How Cleaning Works — Mechanisms</h3>
+      <div class="pill-row">
+        <span class="pill">Dispersion</span><span class="pill">Penetration</span><span class="pill">Dissolve</span>
+        <span class="pill">Emulsification</span><span class="pill">Peptization</span><span class="pill">Saponification</span>
+        <span class="pill">Colloidal action</span><span class="pill">Renising</span>
+      </div>
+    </section>
+
+    <section id="tables">
+      <span class="kicker">Section 13</span>
+      <h2>Reference Tables</h2>
+
+      <h3>Heat Inactivation of Poultry Pathogens</h3>
+      <table class="spec-table">
+        <tr><th>Disease</th><th>Heat Inactivation</th></tr>
+        <tr><td>Avian Influenza</td><td>56°C for 15–120 min, or 60°C for 10 min</td></tr>
+        <tr><td>Bursal disease</td><td>70°C for 30 min</td></tr>
+        <tr><td>Infectious Coryza</td><td>55°C for 10 min</td></tr>
+        <tr><td>Infectious Bronchitis</td><td>56°C for 15 min</td></tr>
+        <tr><td>Mycoplasma</td><td>50°C for 20 min</td></tr>
+        <tr><td>Marek's disease</td><td>60°C for 10 min</td></tr>
+        <tr><td>Newcastle disease</td><td>56°C for 6 hr</td></tr>
+      </table>
+      <p style="font-size:.82rem;color:var(--ink-soft)">Source: United States Department of Agriculture</p>
+
+      <h3>Common Floor Treatments</h3>
+      <table class="spec-table">
+        <tr><th>Compound</th><th>Application rate (kg/m²)</th><th>Purpose</th></tr>
+        <tr><td>Boric acid</td><td>As necessary</td><td>Kills darkling beetles</td></tr>
+        <tr><td>Ammonium chloride + sodium hydroxide</td><td>0.1 + 0.1</td><td>Coccidial disinfection</td></tr>
+        <tr><td>Salt (NaCl)</td><td>0.25</td><td>Reduction of Clostridium counts</td></tr>
+        <tr><td>Sulphur powder</td><td>0.01</td><td>Lowers pH</td></tr>
+        <tr><td>Lime (calcium oxide/hydroxide)</td><td>As necessary</td><td>Disinfection</td></tr>
+      </table>
+
+      <h3>Prevention of Coccidia</h3>
+      <div class="callout">
+        Homogenous mixture of common salt, or caustic soda flakes: <strong>1–2 kg caustic soda + 30 L water per 1,000 sq ft.</strong>
+      </div>
+
+      <h3>Aerial Disinfection Methods</h3>
+      <div class="card-grid">
+        <div class="card">
+          <h4>1. Spraying</h4>
+          <p>Knapsack sprayer or pressure washer — relatively large particles, higher wetting capacity, but stay airborne for less time. Any good commercial disinfectant, 24 hours before chick placement, e.g. Viruquat 3 ml/1 L water.</p>
+        </div>
+        <div class="card">
+          <h4>2. Fumigation</h4>
+          <p>Combining 2+ chemicals to produce a vaporised disinfectant — mainly used with formaldehyde. For 1,000 sq ft, 3 days before chick arrival: KMnO₄ 600 g + Formalin 1,200 ml.</p>
+        </div>
+        <div class="card">
+          <h4>3. Thermal fogging</h4>
+          <p>Heating the disinfectant to produce a fine vapor. Small particle size gives the best penetration and suspension.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="checklist">
+      <span class="kicker">Section 14</span>
+      <h2>Please Be On Your Guard</h2>
+      <p style="color:var(--ink-soft);max-width:640px">Disease can enter through any of these routes — every one needs a deliberate control point.</p>
+      <div class="pill-row">
+        <span class="pill">People</span><span class="pill">Housing</span><span class="pill">Water</span><span class="pill">Feed</span>
+        <span class="pill">Bedding material</span><span class="pill">Source flock</span><span class="pill">Hatchery</span>
+        <span class="pill">Vehicles &amp; equipment</span><span class="pill">Rodents &amp; insects</span><span class="pill">Wild birds</span>
+      </div>
+
+      <h3>Bio-security Checklist</h3>
+      <div class="card-grid">
+        <div class="card">
+          <ul class="check">
+            <li>Proper fencing</li>
+            <li>Vehicle spray</li>
+            <li>Separate clothing</li>
+            <li>Foot dip at entrance</li>
+            <li>Minimum plantation</li>
+          </ul>
+        </div>
+        <div class="card">
+          <ul class="check">
+            <li>Proper water sanitization</li>
+            <li>Separate PM room</li>
+            <li>Proper disposal of dead birds</li>
+            <li>Minimum visitors</li>
+          </ul>
+        </div>
+        <div class="card">
+          <ul class="check">
+            <li>Entry restricted to stray/pet animals</li>
+            <li>No exchange of material from neighbouring farms</li>
+            <li>All-in, all-out system</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout warn" style="margin-top:24px;">
+        <strong>Keep gate closed — no matter what the chickens say.</strong> Bio-security is only as strong as its most casually left-open door.
+      </div>
+    </section>
+
+    <footer>
+      Bio-security Management in Poultry Farms — field reference guide. Compiled from farm training material covering housing design, infrastructure, equipment and the shed cleaning &amp; disinfection protocol.
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('menuToggle');
+  const scrim = document.getElementById('scrim');
+
+  function openMenu(){ sidebar.classList.add('open'); scrim.classList.add('show'); }
+  function closeMenu(){ sidebar.classList.remove('open'); scrim.classList.remove('show'); }
+
+  toggle.addEventListener('click', ()=>{
+    sidebar.classList.contains('open') ? closeMenu() : openMenu();
+  });
+  scrim.addEventListener('click', closeMenu);
+
+  document.querySelectorAll('nav.toc a').forEach(a=>{
+    a.addEventListener('click', ()=>{ if(window.innerWidth <= 900) closeMenu(); });
+  });
+
+  // Active link highlighting
+  const links = Array.from(document.querySelectorAll('nav.toc a'));
+  const sections = links.map(l => document.querySelector(l.getAttribute('href')));
+
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      const id = '#' + entry.target.id;
+      const link = links.find(l => l.getAttribute('href') === id);
+      if(!link) return;
+      if(entry.isIntersecting){
+        links.forEach(l=>l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+
+  sections.forEach(s => { if(s) observer.observe(s); });
+</script>
+
+</body>
+</html>

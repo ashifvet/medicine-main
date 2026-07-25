@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Safe Medicines Directory</title>
+    <style>
+        :root {
+            --primary-color: #ec4899;
+            --primary-hover: #db2777;
+            --bg-color: #fdf2f8;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #fbcfe8;
+            --safe-color: #15803d;
+            --badge-bg: #dcfce7;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* ট্যাব বা নেভিগেশন বারের স্টাইল (index.html থেকে নেওয়া) */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .nav-tabs a {
+            text-decoration: none;
+            padding: 10px 18px;
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs a:hover {
+            background-color: #e2e8f0;
+            color: #0f172a;
+        }
+
+        /* বর্তমানে যে পেজে আছেন সেটি সক্রিয় (Active) দেখাবে */
+        .nav-tabs a.active {
+            background-color: #0284c7;
+            color: #ffffff;
+            border-color: #0284c7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-hover);
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            color: #831843;
+            margin-top: 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .search-box:focus {
+            border-color: var(--primary-color);
+        }
+
+        .counter {
+            align-self: center;
+            font-weight: bold;
+            color: var(--primary-hover);
+            background-color: #fce7f3;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .drug-name {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .badge-safe {
+            background-color: var(--badge-bg);
+            color: var(--safe-color);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .company {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .info-row {
+            margin: 6px 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .indication {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 0.88rem;
+            color: #334155;
+        }
+
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 40px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🤰 Pregnancy Safe Medicines Directory</h1>
+            <p class="subtitle">গর্ভাবস্থায় ব্যবহারের জন্য নিরাপদ ওষুধসমূহের তালিকা</p>
+        </header>
+
+        <!-- ট্যাব নেভিগেশন বার শুরু -->
+        <nav class="nav-tabs">
+            <a href="index.html">All Drugs</a>
+            <a href="small-animals.html">Small or Pet Animal Medicines</a>
+            <a href="pregnancy-safe.html" class="active">Pregnancy Safe Medicines</a>
+        </nav>
+        <!-- ট্যাব নেভিগেশন বার শেষ -->
+
+        <div id="loading-status" style="color: red; text-align: center; font-weight: bold; padding: 10px; display: none;">
+            সিস্টেম লোড হচ্ছে, দয়া করে অপেক্ষা করুন...
+        </div>
+
+        <div class="controls">
+            <input type="text" id="searchInput" class="search-box" placeholder="ওষুধের নাম, উপাদান বা নির্দেশিকা দিয়ে খুঁজুন...">
+            <div id="medicineCount" class="counter">মোট: 0 টি ওষুধ</div>
+        </div>
+
+        <div id="drugGrid" class="grid">
+            <!-- Dynamic elements will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Loading external data source -->
+    <script src="data.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const drugGrid = document.getElementById('drugGrid');
+            const searchInput = document.getElementById('searchInput');
+            const medicineCount = document.getElementById('medicineCount');
+
+            // Filtering drugs strictly where safe property is "Safe"
+            const pregnancySafeDrugs = allDrugs.filter(drug => drug.safe === "Safe");
+
+            // Render function
+            function renderDrugs(drugs) {
+                drugGrid.innerHTML = '';
+                medicineCount.textContent = `মোট: ${drugs.length} টি ওষুধ`;
+
+                if (drugs.length === 0) {
+                    drugGrid.innerHTML = `<div class="no-results">কোনো নিরাপদ ওষুধ খুঁজে পাওয়া যায়নি।</div>`;
+                    return;
+                }
+
+                drugs.forEach(drug => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div>
+                            <div class="card-header">
+                                <h3 class="drug-name">${drug.sl}. ${drug.name}</h3>
+                                <span class="badge-safe">Pregnancy Safe</span>
+                            </div>
+                            <div class="company">কোম্পানি: ${drug.co}</div>
+                            
+                            <div class="info-row">
+                                <span class="info-label">উপাদান:</span> ${drug.comp_val}
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">প্যাক সাইজ:</span> ${drug.pack}
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">মাত্রা (Dose):</span> ${drug.mgkg}
+                            </div>
+                            <div class="indication">
+                                <span class="info-label">নির্দেশনা:</span> ${drug.ind}
+                            </div>
+                        </div>
+                    `;
+                    drugGrid.appendChild(card);
+                });
+            }
+
+            // Initial view load
+            renderDrugs(pregnancySafeDrugs);
+
+            // Filter on search input
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                const filtered = pregnancySafeDrugs.filter(drug => 
+                    drug.name.toLowerCase().includes(searchTerm) ||
+                    drug.comp_val.toLowerCase().includes(searchTerm) ||
+                    drug.ind.toLowerCase().includes(searchTerm) ||
+                    drug.co.toLowerCase().includes(searchTerm)
+                );
+                renderDrugs(filtered);
+            });
+        });
+    </script>
+</body>
+</html>
