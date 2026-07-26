@@ -1,1 +1,1459 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DoseMaster — Small Animal Rx Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Tiro+Bangla&family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F2F6F3;
+    --surface:#FFFFFF;
+    --surface-alt:#E9F0EB;
+    --ink:#15231F;
+    --ink-soft:#4C5F58;
+    --ink-faint:#7C8D86;
+    --teal-900:#0F2E28;
+    --teal-700:#154A40;
+    --teal-500:#1F6A5A;
+    --teal-100:#DCEAE4;
+    --amber:#BE8A2E;
+    --amber-100:#F6EAD2;
+    --red:#A63A2E;
+    --red-100:#F5E1DD;
+    --blue:#2E5C78;
+    --blue-100:#E1EBF1;
+    --line:#D8E2DC;
+    --line-soft:#E6EDE9;
+    --radius:14px;
+    --shadow: 0 1px 2px rgba(15,46,40,.06), 0 8px 24px -12px rgba(15,46,40,.18);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Hind Siliguri','Inter',sans-serif;
+    font-size:15.5px;
+    line-height:1.65;
+  }
+  .en{font-family:'Inter',sans-serif;}
+  h1,h2,h3,h4{font-family:'Tiro Bangla','Fraunces',serif; font-weight:400; margin:0; color:var(--teal-900); letter-spacing:.1px;}
+  .head-en{font-family:'Fraunces',serif;}
+  a{color:inherit;}
+  .mono{font-family:'JetBrains Mono',monospace;}
 
+  /* ---------- layout shell ---------- */
+  .shell{display:grid; grid-template-columns:290px 1fr; min-height:100vh;}
+  .sidebar{
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+    background:var(--teal-900); color:#DCEAE4;
+    padding:22px 16px 60px;
+    border-right:1px solid rgba(255,255,255,.06);
+  }
+  .sidebar::-webkit-scrollbar{width:8px;}
+  .sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15); border-radius:8px;}
+
+  .brand{display:flex; align-items:center; gap:10px; padding:2px 6px 18px; border-bottom:1px solid rgba(255,255,255,.1); margin-bottom:16px;}
+  .brand-mark{
+    width:38px; height:38px; border-radius:10px; background:linear-gradient(160deg,var(--amber),#8f611c);
+    display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-size:20px; color:#1c1206; flex:none;
+  }
+  .brand-text .t1{font-family:'Fraunces',serif; font-size:19px; color:#fff; line-height:1.1;}
+  .brand-text .t2{font-size:11px; color:#9FC0B4; letter-spacing:.06em; text-transform:uppercase;}
+
+  .search-wrap{position:relative; margin-bottom:18px;}
+  #search{
+    width:100%; padding:10px 12px 10px 34px; border-radius:10px; border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.06); color:#fff; font-family:'Hind Siliguri',sans-serif; font-size:13.5px; outline:none;
+  }
+  #search::placeholder{color:#8AA79C;}
+  #search:focus{border-color:var(--amber);}
+  .search-wrap svg{position:absolute; left:11px; top:50%; transform:translateY(-50%); opacity:.6;}
+  #searchInfo{font-size:11px; color:#8AA79C; margin:-12px 0 14px 2px; display:none;}
+
+  nav.groups{display:flex; flex-direction:column; gap:2px;}
+  .group-title{
+    display:flex; align-items:center; gap:8px; width:100%; text-align:left; background:none; border:none;
+    color:#CFE3DA; font-family:'Hind Siliguri',sans-serif; font-weight:600; font-size:13px; padding:9px 8px;
+    border-radius:8px; cursor:pointer;
+  }
+  .group-title:hover{background:rgba(255,255,255,.06);}
+  .group-title .num{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--amber); width:18px; flex:none;}
+  .group-title .chev{margin-left:auto; transition:transform .2s ease; opacity:.6; flex:none;}
+  .group.open .chev{transform:rotate(90deg);}
+  .group-items{max-height:0; overflow:hidden; transition:max-height .25s ease;}
+  .group.open .group-items{max-height:900px;}
+  .group-items a{
+    display:block; padding:6px 10px 6px 34px; font-size:12.5px; color:#A9C7BB; text-decoration:none;
+    border-radius:7px;
+  }
+  .group-items a:hover{color:#fff; background:rgba(255,255,255,.06);}
+  .group-items a.active{color:#fff; background:rgba(190,138,46,.22);}
+
+  .sidebar-foot{margin-top:26px; padding-top:16px; border-top:1px solid rgba(255,255,255,.1); font-size:11px; color:#7FA093;}
+
+  /* ---------- main ---------- */
+  main{padding:0;}
+  .hero{
+    padding:46px 48px 34px; background:
+      radial-gradient(1100px 380px at 85% -20%, rgba(190,138,46,.12), transparent 60%),
+      var(--surface);
+    border-bottom:1px solid var(--line);
+  }
+  .hero .eyebrow{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--amber); margin-bottom:10px;}
+  .hero h1{font-size:38px; color:var(--teal-900); margin-bottom:8px;}
+  .hero h1 .bn{font-family:'Tiro Bangla',serif;}
+  .hero p{max-width:640px; color:var(--ink-soft); font-size:15px; margin-top:6px;}
+  .hero-stats{display:flex; gap:26px; margin-top:26px; flex-wrap:wrap;}
+  .hstat{border-left:2px solid var(--amber); padding-left:12px;}
+  .hstat .n{font-family:'Fraunces',serif; font-size:26px; color:var(--teal-900); line-height:1;}
+  .hstat .l{font-size:11.5px; color:var(--ink-faint); margin-top:3px;}
+
+  .content{padding:36px 48px 90px; max-width:1180px;}
+
+  .catgroup{margin-bottom:56px;}
+  .catgroup-head{display:flex; align-items:baseline; gap:14px; margin-bottom:6px; padding-bottom:14px; border-bottom:2px solid var(--teal-900);}
+  .catgroup-head .gi{font-family:'JetBrains Mono',monospace; font-size:12px; color:#fff; background:var(--teal-900); border-radius:6px; padding:3px 8px;}
+  .catgroup-head h2{font-size:25px;}
+  .catgroup-sub{color:var(--ink-faint); font-size:13px; margin:0 0 22px;}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(360px,1fr)); gap:18px;}
+  .grid.full{grid-template-columns:1fr;}
+
+  /* ---------- Rx card (signature element) ---------- */
+  .rx-card{
+    position:relative; background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--radius); box-shadow:var(--shadow); padding:20px 20px 18px;
+    scroll-margin-top:20px;
+  }
+  .rx-card::before{
+    content:""; position:absolute; top:-1px; left:16px; right:16px; height:8px;
+    background-image: radial-gradient(circle 4px, var(--bg) 4px, transparent 4.5px);
+    background-size: 16px 16px; background-position: 0 -4px; background-repeat:repeat-x;
+  }
+  .rx-card.critical{border-color:rgba(166,58,46,.4); box-shadow:0 1px 2px rgba(166,58,46,.08), 0 10px 26px -14px rgba(166,58,46,.35);}
+  .rx-card.critical::after{
+    content:"LIFE RISK"; position:absolute; top:14px; right:-8px; background:var(--red); color:#fff;
+    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.08em; padding:4px 10px 4px 12px;
+    border-radius:4px 0 0 4px; box-shadow:0 2px 6px rgba(166,58,46,.4);
+  }
+  .rx-head{display:flex; align-items:flex-start; gap:12px; margin-bottom:10px;}
+  .rx-mark{
+    flex:none; width:34px; height:34px; border-radius:9px; background:var(--amber-100); color:var(--amber);
+    display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-size:19px; font-weight:600;
+    border:1px solid rgba(190,138,46,.3);
+  }
+  .rx-title h3{font-size:17px; color:var(--teal-900); line-height:1.3;}
+  .rx-title .rx-sub{font-size:12px; color:var(--ink-faint); margin-top:2px;}
+  .chips{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
+  .chip{
+    font-size:11px; padding:3px 9px; border-radius:999px; background:var(--surface-alt); color:var(--teal-700);
+    border:1px solid var(--line); font-family:'Inter',sans-serif; font-weight:500;
+  }
+  .chip.warn{background:var(--red-100); color:var(--red); border-color:rgba(166,58,46,.25);}
+  .chip.temp{background:var(--blue-100); color:var(--blue); border-color:rgba(46,92,120,.2);}
+
+  .rx-history{
+    font-size:13px; color:var(--ink-soft); background:var(--surface-alt); border-radius:10px; padding:10px 12px;
+    margin:12px 0 14px; border-left:3px solid var(--teal-500);
+  }
+  .rx-history b{color:var(--teal-700); font-family:'Inter',sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:.04em;}
+
+  ol.rx-list{list-style:none; margin:0; padding:0; counter-reset:rxstep; display:flex; flex-direction:column; gap:8px;}
+  ol.rx-list li{
+    counter-increment:rxstep; display:grid; grid-template-columns:24px 1fr; gap:10px; align-items:start;
+    padding:8px 10px; border-radius:8px; background:var(--bg);
+  }
+  ol.rx-list li::before{
+    content:counter(rxstep); font-family:'JetBrains Mono',monospace; font-size:11px; color:#fff;
+    background:var(--teal-500); width:20px; height:20px; border-radius:6px; display:flex; align-items:center; justify-content:center; margin-top:1px;
+  }
+  .rx-drug{font-weight:600; color:var(--teal-900);}
+  .rx-dose{
+    display:inline-block; font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--amber); background:var(--amber-100);
+    padding:1px 7px; border-radius:6px; margin:0 4px; border:1px solid rgba(190,138,46,.25);
+  }
+  .rx-freq{color:var(--ink-soft); font-size:13px;}
+
+  .rx-foot{margin-top:14px; padding-top:12px; border-top:1px dashed var(--line);}
+  .rx-foot b{color:var(--teal-700); font-family:'Inter',sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:.04em;}
+  .rx-foot p{margin:4px 0 0; font-size:13px; color:var(--ink-soft);}
+  .rx-foot ul{margin:4px 0 0; padding-left:18px; font-size:13px; color:var(--ink-soft);}
+
+  .note-box{
+    margin-top:10px; font-size:12.5px; background:var(--blue-100); color:#274a63; border-radius:9px; padding:9px 11px;
+    border-left:3px solid var(--blue);
+  }
+  .warn-box{
+    margin-top:10px; font-size:12.5px; background:var(--red-100); color:#7d2c22; border-radius:9px; padding:9px 11px;
+    border-left:3px solid var(--red);
+  }
+
+  /* ---------- plain info card ---------- */
+  .info-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px 24px; scroll-margin-top:20px;}
+  .info-card h3{font-size:18px; margin-bottom:10px; color:var(--teal-900);}
+  .info-card h4{font-size:14px; color:var(--teal-700); margin:14px 0 6px; font-family:'Inter',sans-serif; font-weight:600;}
+  .info-card p{margin:6px 0; font-size:13.5px; color:var(--ink-soft);}
+  .info-card ul{margin:6px 0; padding-left:20px; font-size:13.5px; color:var(--ink-soft);}
+  .info-card li{margin-bottom:3px;}
+  .pill-row{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0;}
+
+  /* ---------- tables ---------- */
+  .table-wrap{overflow-x:auto; border-radius:10px; border:1px solid var(--line); margin:10px 0;}
+  table.dose-table{width:100%; border-collapse:collapse; font-size:13px; min-width:480px;}
+  table.dose-table th{
+    background:var(--teal-900); color:#DCEAE4; text-align:left; padding:9px 12px; font-family:'Inter',sans-serif;
+    font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.03em; white-space:nowrap;
+  }
+  table.dose-table td{padding:9px 12px; border-top:1px solid var(--line-soft); color:var(--ink-soft); vertical-align:top;}
+  table.dose-table tr:nth-child(even) td{background:var(--surface-alt);}
+  table.dose-table td.drug{color:var(--teal-900); font-weight:600;}
+  table.dose-table td .dose{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--amber);}
+
+  /* pathway diagram */
+  .pathway{display:flex; flex-direction:column; align-items:flex-start; gap:0; margin:14px 0;}
+  .pathway .pnode{background:var(--teal-900); color:#fff; padding:9px 16px; border-radius:8px; font-size:13px; font-weight:600;}
+  .pathway .parrow{color:var(--amber); font-size:18px; padding:2px 0 2px 20px;}
+
+  .divider{height:1px; background:var(--line); margin:26px 0;}
+
+  footer.pagefoot{padding:30px 48px 60px; color:var(--ink-faint); font-size:12px; border-top:1px solid var(--line);}
+
+  @media (max-width: 880px){
+    .shell{grid-template-columns:1fr;}
+    .sidebar{position:relative; height:auto; max-height:340px;}
+    .hero, .content{padding-left:20px; padding-right:20px;}
+  }
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">℞</div>
+      <div class="brand-text">
+        <div class="t1">DoseMaster</div>
+        <div class="t2">Small Animal Rx</div>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8AA79C" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="search" type="text" placeholder="Search drug, disease, ওষুধ...">
+    </div>
+    <div id="searchInfo"></div>
+
+    <nav class="groups" id="groups"></nav>
+
+    <div class="sidebar-foot">
+      DoseMaster · Bangladesh field reference<br>Compiled for clinical use only
+    </div>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <div class="eyebrow">Veterinary Clinical Reference · Cat &amp; Dog</div>
+      <h1><span class="head-en">DoseMaster</span> <span class="bn">— ছোট প্রাণীর দ্রুত চিকিৎসা নির্দেশিকা</span></h1>
+      <p>বিড়াল ও কুকুরের সাধারণ রোগ, জরুরি অবস্থা এবং ওজন-ভিত্তিক ডোজ ক্যালকুলেশনের একটি বাংলাদেশ-কেন্দ্রিক দ্রুত রেফারেন্স। প্রতিটি কেস হিস্ট্রি, চিকিৎসা পরিকল্পনা (Rx) এবং ক্লিনিক্যাল নোট সহ সাজানো।</p>
+      <div class="hero-stats">
+        <div class="hstat"><div class="n">19</div><div class="l">Clinical categories</div></div>
+        <div class="hstat"><div class="n">60+</div><div class="l">Cases &amp; drug guides</div></div>
+        <div class="hstat"><div class="n">Cat / Dog</div><div class="l">Species covered</div></div>
+      </div>
+    </div>
+
+    <div class="content" id="content">
+
+<!-- ============================================================ 01 FELINE VIRAL DISEASES ============================================================ -->
+<section class="catgroup" data-group="01" id="cat-01">
+  <div class="catgroup-head"><span class="gi">01</span><h2>বিড়ালের ভাইরাসজনিত রোগ (Feline Viral Diseases)</h2></div>
+  <p class="catgroup-sub">Feline Panleukopenia (FPV) &amp; Feline Infectious Peritonitis (FIP)</p>
+  <div class="grid">
+
+    <article class="rx-card critical" id="fpv-case-1" data-title="FPV Case 1 Feline Panleukopenia">
+      <div class="rx-head">
+        <div class="rx-mark">℞</div>
+        <div class="rx-title">
+          <h3>Feline Panleukopenia (FPV) — Case 1</h3>
+          <div class="rx-sub">FPV Test: Positive (+)</div>
+        </div>
+      </div>
+      <div class="chips">
+        <span class="chip">🐱 Cat · Male</span>
+        <span class="chip">1.2 kg</span>
+        <span class="chip temp">Temp 105.1°F</span>
+      </div>
+      <div class="rx-history"><b>H/O</b><br>বমি, ডায়রিয়া, খাওয়ার অরুচি ও ২ দিন ধরে দুর্বলতা। পানি কম খাচ্ছে, দুর্বল দেখাচ্ছে। কোনো ভ্যাকসিন রেকর্ড নেই।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Topecef Vet</span><span class="rx-dose">0.25 ml IM</span><br><span class="rx-freq">প্রতিদিন একবার, ৭ দিন</span></span></li>
+        <li><span><span class="rx-drug">Inj. Pantomix 40mg</span><span class="rx-dose">0.4 ml S/C</span><br><span class="rx-freq">প্রতিদিন একবার, ৭ দিন</span></span></li>
+        <li><span><span class="rx-drug">Inj. Emistat 8mg</span><span class="rx-dose">0.4 ml IM</span><br><span class="rx-freq">প্রতিদিন দুইবার, ৭ দিন</span></span></li>
+        <li><span><span class="rx-drug">Inj. Aminovit Plus Vet</span><span class="rx-dose">0.6 ml S/C</span><br><span class="rx-freq">প্রতিদিন একবার, ৭ দিন</span></span></li>
+        <li><span><span class="rx-drug">Inj. Metro IV</span><span class="rx-dose">5 ml IV</span><br><span class="rx-freq">প্রতিদিন একবার, ৭ দিন</span></span></li>
+        <li><span><span class="rx-drug">NS / HSV Saline</span><span class="rx-dose">30 ml (10+20) IV/SC</span><br><span class="rx-freq">প্রতিদিন দুইবার, ৭ দিন</span></span></li>
+      </ol>
+      <div class="rx-foot"><b>Advice</b><p>খাদ্যগ্রহণ ও হাইড্রেশন নিবিড় পর্যবেক্ষণ করতে হবে। ডায়রিয়া/বমি বাড়লে দ্রুত যোগাযোগ করুন।</p></div>
+    </article>
+
+    <article class="rx-card" id="fpv-case-2" data-title="FPV Case 2">
+      <div class="rx-head">
+        <div class="rx-mark">℞</div>
+        <div class="rx-title"><h3>FPV — Case 2</h3><div class="rx-sub">Tentative Diagnosis: FPV (+ve)</div></div>
+      </div>
+      <div class="chips"><span class="chip">🐱 Cat · 13M · M/F</span><span class="chip">3.2 kg</span><span class="chip temp">Temp 97°F</span></div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. DNS-5% / HS / NS</span><span class="rx-dose">70 ml S/C or IV</span><br><span class="rx-freq">daily 2x, 5–7 days</span></span></li>
+        <li><span><span class="rx-drug">Inj. Emistate / Onaseron / Anset</span><span class="rx-dose">0.80 ml IM</span><br><span class="rx-freq">daily 2x, 5 days</span></span></li>
+        <li><span><span class="rx-drug">Inj. Amodis / Filmet / Filamyd</span><span class="rx-dose">6 ml S/C or IV</span><br><span class="rx-freq">daily 2x, 5–7 days</span></span></li>
+        <li><span><span class="rx-drug">Inj. Aminovit Plus / Megasol Vet</span><span class="rx-dose">2 ml S/C or IV</span><br><span class="rx-freq">daily 1x, 5–7 days</span></span></li>
+        <li><span><span class="rx-drug">Inj. Ceftron / Eracef / Trizon 500mg</span><span class="rx-dose">0.60 ml IM</span><br><span class="rx-freq">daily 1x, 5–7 days</span></span></li>
+        <li><span><span class="rx-drug">Inj. Pantonix / Pantid / Progut 40mg</span><span class="rx-dose">0.80 ml S/C or IV</span><br><span class="rx-freq">daily 1x, 5–7 days</span></span></li>
+        <li><span><span class="rx-drug">Inj. Steron / Dexavet / Dexacare / Camlox</span><span class="rx-dose">0.30 ml IM</span><br><span class="rx-freq">daily 1x, 5 days</span></span></li>
+      </ol>
+      <div class="rx-foot"><b>Advice &amp; Follow-up</b><p>হাইড্রেশন ও ফুড ইনটেক মনিটর করতে হবে; দুর্বলতা/বমি/ডায়রিয়া হলে দ্রুত জানাতে হবে। ট্রিটমেন্ট চলাকালীন অবস্থা অনুযায়ী রি-চেক।</p></div>
+    </article>
+
+    <article class="info-card full" style="grid-column:1/-1" id="fip-overview" data-title="FIP Overview Feline Infectious Peritonitis">
+      <h3>FIP Overview — Feline Infectious Peritonitis</h3>
+      <p>FIP হলো ফেলাইন করোনাভাইরাস (FCoV) দ্বারা সৃষ্ট রোগ, যা বিশেষ করে kittens বা রোগপ্রতিরোধ ক্ষমতা কম থাকা cats-এ মারাত্মক। দুই ধরনের হয়:</p>
+      <ul>
+        <li><b>Wet / Effusive FIP:</b> Abdominal বা Thoracic fluid জমে যায়।</li>
+        <li><b>Dry / Non-effusive FIP:</b> Organs যেমন liver, kidney, eye, nervous system আক্রান্ত হয়।</li>
+      </ul>
+      <p><b>লক্ষণ:</b> জ্বর, দুর্বলতা, খাওয়া কমে যাওয়া, ওজন কমা, abdominal swelling (Wet), চোখ ও নার্ভের সমস্যা (Dry)।</p>
+      <h4>A. Antiviral Therapy</h4>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>Drug</th><th>Dose</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td class="drug">GS-441524 (Nucleoside analogue)</td><td class="dose">5–10 mg/kg SC daily, 12–14 weeks</td><td>বর্তমানে most effective, widely used; অনেক cats সম্পূর্ণ সুস্থ হতে পারে</td></tr>
+          <tr><td class="drug">GC376 (Protease inhibitor)</td><td class="dose">10–15 mg/kg SC daily</td><td>Duration varies; Wet FIP-এ ভালো response</td></tr>
+        </tbody>
+      </table></div>
+      <div class="warn-box">এগুলো বাংলাদেশে licensed drugs নয় — veterinary supervision + legal sourcing প্রয়োজন।</div>
+      <h4>B. Supportive &amp; C. Symptomatic Therapy</h4>
+      <ul>
+        <li>Fluid therapy — IV/SC saline বা Ringer's lactate</li>
+        <li>Nutritional support — appetite stimulant / high-calorie diet</li>
+        <li>Anti-inflammatory — corticosteroids (low dose)</li>
+        <li>Pain management, liver/kidney support, secondary-infection antibiotics, ocular treatment</li>
+      </ul>
+      <p><b>Prognosis:</b> Wet FIP — poor without antiviral therapy.</p>
+    </article>
+
+    <article class="rx-card" id="fip-case" data-title="FIP kit positive case sneezing nasal secretion">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>কেস স্টাডি — FIP kit (+)ve</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat · 8Y · M</span><span class="chip">3.55 kg</span><span class="chip temp">Temp 100.1°F</span></div>
+      <div class="rx-history"><b>Clinical Signs</b><br>Sneezing, nasal secretion।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. GS</span><span class="rx-dose">1.5 ml SC</span><br><span class="rx-freq">প্রতিদিন একবার, ৮৪ দিন পর্যন্ত</span></span></li>
+        <li><span><span class="rx-drug">Inj. Moxin (500mg IM)</span><span class="rx-dose">0.55 ml SC</span><br><span class="rx-freq">দিনে ২ বার, ১৪ দিন</span></span></li>
+        <li><span><span class="rx-drug">Inj. Roxadex</span><span class="rx-dose">0.15 ml SC</span><br><span class="rx-freq">দিনে ২বার×৭দিন, পরে ১বার×৭দিন</span></span></li>
+        <li><span><span class="rx-drug">Inj. Cynomin</span><span class="rx-dose">0.25 ml SC</span><br><span class="rx-freq">৩ দিন পরপর, ৫ বার</span></span></li>
+        <li><span><span class="rx-drug">Susp. Famotack</span><span class="rx-dose">0.4 + 0 + 0.4 ml</span><br><span class="rx-freq">১৪ দিন, খাবারের আগে</span></span></li>
+      </ol>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ 02 CANINE VIRAL & ONCOLOGY ============================================================ -->
+<section class="catgroup" data-group="02" id="cat-02">
+  <div class="catgroup-head"><span class="gi">02</span><h2>কুকুরের ভাইরাল ও অনকোলজি (Canine Viral &amp; Oncology)</h2></div>
+  <p class="catgroup-sub">Canine Parvovirus (CPV) &amp; Canine Transmissible Venereal Tumor (CTVT)</p>
+  <div class="grid">
+
+    <article class="rx-card critical" style="grid-column:1/-1" id="cpv-case" data-title="Canine Parvo Virus CPV bloody diarrhea vomiting convulsion">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>Canine Parvo Virus (CPV)</h3><div class="rx-sub">Bloody Diarrhea, Vomiting, Convulsion, Severe Dehydration</div></div></div>
+      <div class="chips"><span class="chip">🐶 Dog</span><span class="chip">18 kg</span></div>
+      <div class="rx-history"><b>১. ফ্লুইড থেরাপি</b><br>Inj. Cholera Saline (CS) / NS / RL — <b>360 ml</b> প্রথম দিন (20ml/kg), ডিহাইড্রেশন বেশি হলে দিনে ২-৩ বার প্রয়োজন হতে পারে। প্রয়োগ: শিরাপথে (IV) খুব ধীরে।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Ceftriaxone (Ceftron 0.5gm)</span><span class="rx-dose">1 vial IV</span><br><span class="rx-freq">দিনে ২ বার (সকাল-রাত), ৫-৭ দিন</span></span></li>
+        <li><span><span class="rx-drug">Inj. Metronidazole (IV Soln.)</span><span class="rx-dose">200–300 mg (18kg)</span><br><span class="rx-freq">দিনে ২ বার, ধীরে IV</span></span></li>
+        <li><span><span class="rx-drug">Inj. Tranexamic Acid</span><span class="rx-dose">2.5 ml (250mg)</span><br><span class="rx-freq">দিনে ২ বার Slow IV, রক্ত পায়খানা বন্ধ না হওয়া পর্যন্ত</span></span></li>
+        <li><span><span class="rx-drug">Inj. Ondansetron</span><span class="rx-dose">1.5–2 ml</span><br><span class="rx-freq">দিনে ২-৩ বার IV/SC, খাবারের আধা ঘণ্টা আগে</span></span></li>
+        <li><span><span class="rx-drug">Inj. Omeprazole</span><span class="rx-dose">1.5 ml (18mg)</span><br><span class="rx-freq">দিনে ১-২ বার IV</span></span></li>
+        <li><span><span class="rx-drug">Inj. Amino Acid Solution</span><span class="rx-dose">2 ml</span><br><span class="rx-freq">দিনে ১ বার, স্যালাইনের সাথে মিশিয়ে ধীরে</span></span></li>
+        <li><span><span class="rx-drug">Inj. Vitamin C</span><span class="rx-dose">1 ml</span><br><span class="rx-freq">দিনে ১ বার IM/IV</span></span></li>
+      </ol>
+      <div class="warn-box">
+        <b>বিশেষ সতর্কতা:</b> Meloxicam পরিহার করুন — পারভো ভাইরাসে অন্ত্রের দেয়াল ক্ষতিগ্রস্ত থাকে, রক্তপাত বেড়ে জীবনহানি হতে পারে। খিঁচুনি হলে গ্লুকোজ কমে যাওয়ার কারণে 25% Dextrose + saline দিতে হবে; ভাইরাস মস্তিষ্কে আক্রমণ করলে Inj. Diazepam প্রয়োজন হতে পারে। বমি পুরোপুরি বন্ধ না হওয়া পর্যন্ত মুখে কোনো খাবার/পানি নয় (NPO)। বমি বন্ধের ১২-২৪ ঘণ্টা পর অল্প অল্প করে স্যালাইন পানি/ঝোল শুরু করা যেতে পারে।
+      </div>
+    </article>
+
+    <article class="info-card full" style="grid-column:1/-1" id="ctvt" data-title="Canine Transmissible Venereal Tumor CTVT Vincristine">
+      <h3>Canine Transmissible Venereal Tumor (CTVT)</h3>
+      <p>CTVT কুকুরের একটি বিশেষ ধরনের ক্যান্সার যা মূলত মিলনের (Mating) মাধ্যমে এক কুকুর থেকে অন্য কুকুরে ছড়ায়। ১৮ কেজি ওজনের কুকুরের ব্যবস্থাপনা প্রোটোকল — Vincristine ব্যবহারের সময় ক্যালকুলেশন ও প্রয়োগে সতর্ক থাকতে হয়।</p>
+      <h4>১. কেমোথেরাপি — Inj. Vincristine Sulphate (Criston 2)</h4>
+      <ul>
+        <li>BSA হিসাব: ১৮ কেজি কুকুরের BSA প্রায় 0.7–0.75 m² → ডোজ প্রায় <b>1.4 mg</b></li>
+        <li>প্রয়োগ: অবশ্যই Strictly IV — এক ফোঁটাও চামড়ার নিচে গেলে মাংস পচে গভীর ক্ষত হতে পারে</li>
+        <li>বিরতি: প্রতি সপ্তাহে ১ বার, মোট ৪–৬ সপ্তাহ</li>
+      </ul>
+      <h4>২. সাপোর্টিভ ইনজেকশন (কেমোর ৩০ মিনিট আগে)</h4>
+      <ul>
+        <li>Inj. Antihistamine (Pheniramine Maleate/Astavet) — 2–3 ml IM</li>
+        <li>Inj. Dexamethasone — প্রদাহ ও শক প্রতিরোধে</li>
+      </ul>
+      <h4>৩. অ্যান্টিবায়োটিক ও ড্রেসিং</h4>
+      <p>Ceftriaxone বা Amoxicillin ৫–৭ দিন। আক্রান্ত স্থান প্রতিদিন Povidone-iodine (Viodin) দিয়ে পরিষ্কার।</p>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>কুকুরের ওজন (kg)</th><th>আনুমানিক BSA (m²)</th></tr></thead>
+        <tbody>
+          <tr><td>2</td><td>0.15</td></tr><tr><td>5</td><td>0.30</td></tr><tr><td>10</td><td>0.47</td></tr>
+          <tr><td>18</td><td>0.70</td></tr><tr><td>20</td><td>0.74</td></tr><tr><td>30</td><td>0.96</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ 03 VACCINATION ============================================================ -->
+<section class="catgroup" data-group="03" id="cat-03">
+  <div class="catgroup-head"><span class="gi">03</span><h2>ভ্যাকসিনেশন শিডিউল (Vaccination Schedules)</h2></div>
+  <div class="grid">
+    <article class="info-card" id="dog-vax" data-title="Dog vaccination schedule DHPP Rabies">
+      <h3>Dog Vaccination Schedule</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>বয়স</th><th>কোর ভ্যাকসিন</th><th>অপশনাল</th></tr></thead>
+        <tbody>
+          <tr><td>৬–৮ সপ্তাহ</td><td>Distemper, Parvovirus (Recombitek C4)</td><td>Bordetella</td></tr>
+          <tr><td>১০–১২ সপ্তাহ</td><td>DHPP (Recombitek C4)</td><td>Influenza, Lepto, Bordetella, Lyme</td></tr>
+          <tr><td>১৬–১৮ সপ্তাহ</td><td>DHPP, Rabies (C4 &amp; Rabisin)</td><td>Influenza, Lyme, Lepto, Bordetella</td></tr>
+          <tr><td>১২–১৬ মাস</td><td>DHPP, Rabies</td><td>Coronavirus, Lepto, Bordetella, Lyme</td></tr>
+          <tr><td>প্রতি ১–২ বছর</td><td>DHPP</td><td>Influenza, Corona, Lepto, Bordetella, Lyme</td></tr>
+          <tr><td>প্রতি ১–৩ বছর</td><td>Rabies (Rabisin)</td><td>নেই</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+    <article class="info-card" id="cat-vax" data-title="Cat vaccination schedule F3 vaccine FIV FeLV FIP">
+      <h3>Cat Vaccination Schedule</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>বয়স</th><th>কোর (F3)</th><th>নন-কোর</th></tr></thead>
+        <tbody>
+          <tr><td>৬–৮ সপ্তাহ</td><td>F3 (Herpes, Calici, Panleuko) — ১ম</td><td>FIV, FeLV</td></tr>
+          <tr><td>১০–১২ সপ্তাহ</td><td>F3 — ২য়</td><td>FIV, FeLV, Chlamydophila, Bordetella</td></tr>
+          <tr><td>১৪–১৬ সপ্তাহ</td><td>F3 — ৩য়</td><td>FIV, FeLV, *FIP, Chlamydophila, Bordetella</td></tr>
+          <tr><td>বার্ষিক</td><td>F3 Booster (Purevax Feline 4)</td><td>FIV, FeLV, *FIP, Chlamydophila, Bordetella</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============================================================ 04 NEUROLOGY ============================================================ -->
+<section class="catgroup" data-group="04" id="cat-04">
+  <div class="catgroup-head"><span class="gi">04</span><h2>নিউরোলজি (Neurology)</h2></div>
+  <p class="catgroup-sub">Seizure Management, Paralysis &amp; Epilepsy</p>
+  <div class="grid full">
+
+    <article class="info-card" id="seizure" data-title="Seizure management Midazolam Diazepam Phenobarbital">
+      <h3>Management of Seizure (খিঁচুনি)</h3>
+      <h4>১. First-Line — তাৎক্ষণিক থামাতে</h4>
+      <p><b>Inj. Midazolam</b> — Sedno (Healthcare), Midzo (Incepta), Hypnofast (Square) · <span class="rx-dose">0.1–0.2 mg/kg</span> · IV / IM। ৫ মিনিটে কাজ না হলে একবার রিপিট করা যায়।</p>
+      <p>অথবা <b>Inj. Diazepam</b> — Sedil (Square), Easium (Opsonin), Dialam (Incepta) · <span class="rx-dose">0.2–0.3 mg/kg</span> · Slow IV। সরাসরি IM এড়িয়ে চলুন।</p>
+      <h4>২. Second-Line — Loading Dose</h4>
+      <p><b>Inj. Phenobarbital</b> — Luminal (G.A. Co.), Phenobar (Incepta) · <span class="rx-dose">15–20 mg/kg</span> Slow IV, Normal Saline-এ মিশিয়ে ১৫-২০ মিনিটে। 200mg/ml অ্যাম্পুল হলে ১০–১৩ কেজির জন্য ১ মিলি লাগবে।</p>
+      <h4>৩. Maintenance Dose</h4>
+      <p><b>Syr./Tab. Phenobarbital</b> — Syp. Phenobar (20mg/5ml), Tab. Epinal (30/60mg) · <span class="rx-dose">3–5 mg/kg/day</span>, সকাল-রাত ভাগ করে, দীর্ঘমেয়াদী ব্যবহারের জন্য।</p>
+      <div class="warn-box">Respiratory Depression — Midazolam ও Phenobarbital একসাথে দিলে শ্বাস কমে যেতে পারে; O₂ Saturation লক্ষ রাখুন। খিঁচুনির সময় শক্ত মেঝেতে left lateral position-এ শুইয়ে দিন।</div>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>Body Weight</th><th>Midazolam STAT (0.15mg/kg)</th><th>Phenobarbital Loading (20mg/kg)</th><th>Phenobarbital Maintenance (4mg/kg/day)</th></tr></thead>
+        <tbody>
+          <tr><td>2 kg</td><td class="dose">0.3 ml</td><td class="dose">0.2 ml</td><td class="dose">1 + 1 ml</td></tr>
+          <tr><td>3 kg</td><td class="dose">0.45 ml</td><td class="dose">0.3 ml</td><td class="dose">1.5 + 1.5 ml</td></tr>
+          <tr><td>4 kg</td><td class="dose">0.6 ml</td><td class="dose">0.4 ml</td><td class="dose">2 + 2 ml</td></tr>
+          <tr><td>5 kg</td><td class="dose">0.75 ml</td><td class="dose">0.5 ml</td><td class="dose">2.5 + 2.5 ml</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+
+    <article class="rx-card" id="paralysis-epilepsy" data-title="Paralysis Epilepsy nerve tonic Barbit Fluver">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>প্যারালাইসিস ও খিঁচুনি (Paralysis/ Epilepsy)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>শরীর অবশ হওয়া অথবা হঠাৎ অজ্ঞান হয়ে হাত-পা ছোড়া।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">প্যারালাইসিস: Inj. Nerve Tonic (B1+B6+B12)</span></span></li>
+        <li><span><span class="rx-drug">Inj. Dexavet (Dexamethasone)</span></span></li>
+        <li><span><span class="rx-drug">Syp. Pet Joy (Multivitamin)</span></span></li>
+        <li><span><span class="rx-drug">মৃগী: Inj. Barbit (Phenobarbitone)</span></span></li>
+        <li><span><span class="rx-drug">Tab. Fluver 10mg (Flunarizine)</span></span></li>
+        <li><span><span class="rx-drug">মানসিক চাপ: Tab. Xyril / Frenxit / Sedil (Diazepam/Amitriptyline)</span></span></li>
+      </ol>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ 05 ANESTHESIA ============================================================ -->
+<section class="catgroup" data-group="05" id="cat-05">
+  <div class="catgroup-head"><span class="gi">05</span><h2>অ্যানেস্থেশিয়া ও সেডেশন (Anesthesia &amp; Sedation)</h2></div>
+  <div class="grid">
+    <article class="info-card" id="anesthesia-chart" data-title="Anesthesia quick chart Xylazine Ketamine per kg">
+      <h3>Anesthesia Quick Chart (Per 1 kg)</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>Drug</th><th>Trade (BD)</th><th>Dose /kg</th><th>Route</th></tr></thead>
+        <tbody>
+          <tr><td class="drug">Xylazine (2%)</td><td>A-Xyla Vet, Rompun</td><td class="dose">0.05–0.15 ml</td><td>IM/SQ</td></tr>
+          <tr><td class="drug">Ketamine</td><td>G-Ketamine, Ketamin</td><td class="dose">0.1–0.2 ml</td><td>IM/IV</td></tr>
+        </tbody>
+      </table></div>
+      <p>বিড়ালের সিডেশনের জন্য Xylazine 0.15 ml/kg; গভীর অ্যানেস্থেশিয়ায় ডোজ কমিয়ে কিটামিনের সাথে দিতে হয়। বিড়ালে Ketamine সাধারণত 22–33 mg/kg (0.22–0.33 ml/kg)।</p>
+      <div class="warn-box">সবসময় Insulin Syringe ব্যবহার করবেন — ডোজগুলো অত্যন্ত ক্ষুদ্র।</div>
+    </article>
+    <article class="info-card" id="local-anesthesia" data-title="Local anesthesia Lidocaine per kg toxic dose">
+      <h3>Local Anesthesia — Lidocaine (Per 1 kg)</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>Drug</th><th>Trade (BD)</th><th>Dose /kg</th><th>Route</th></tr></thead>
+        <tbody>
+          <tr><td class="drug">Lidocaine (2%)</td><td>Jasocaine, Lidocaine Inj.</td><td class="dose">0.1–0.2 ml</td><td>Local Infiltration/Nerve Block</td></tr>
+        </tbody>
+      </table></div>
+      <div class="warn-box">Toxic Dose: বিড়ালে সর্বোচ্চ নিরাপদ 5 mg/kg (0.25 ml/kg), কুকুরে 10 mg/kg (0.5 ml/kg)। এর বেশি হলে টক্সিসিটি বা খিঁচুনি হতে পারে।</div>
+      <p>কার্যকাল: ২–৫ মিনিটে অবশ হয়, প্রভাব ৩০–৬০ মিনিট পর্যন্ত থাকে।</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============================================================ 06 EMERGENCY & CRITICAL CARE ============================================================ -->
+<section class="catgroup" data-group="06" id="cat-06">
+  <div class="catgroup-head"><span class="gi">06</span><h2>জরুরি ও ক্রিটিক্যাল কেয়ার (Emergency &amp; Critical Care)</h2></div>
+  <div class="grid">
+
+    <article class="info-card" id="anesthetic-hazards" data-title="Anesthetic hazards fluid therapy neostigmine reversal">
+      <h3>Anesthetic Hazards Management</h3>
+      <h4>১. Fluid Therapy</h4>
+      <p>Normal Saline / Hartmann's Solution — <span class="rx-dose">20 ml/kg</span> IV/SC।</p>
+      <h4>২. Reversal Agent — Neostigmine</h4>
+      <p>Trade: Stigmin (Incepta), Neostigmine (G-Pharma), Prostigmin। Dose (Dog/Cat): <span class="rx-dose">0.04 mg/kg</span>, প্রতি ৬ ঘণ্টা পরপর। (0.5mg/1ml অ্যাম্পুল অনুযায়ী: ১২.৫ কেজি→১ml, ৬ কেজি→0.5ml, ৩ কেজি→0.25ml)</p>
+      <h4>৩. জরুরি ব্যবস্থা</h4>
+      <ul>
+        <li>Coma — Steroid (Inj. Dexon বা Solu-Cortef)</li>
+        <li>Ventilation — O₂ Support প্রয়োজনে</li>
+        <li>Hypothermia — গরম কাপড়/কম্বল বা গরম পানির ব্যাগ (সরাসরি চামড়ায় নয়)</li>
+      </ul>
+      <div class="warn-box">Neostigmine দেওয়ার আগে Heart Rate দেখুন — Bradycardia করতে পারে, তাই আগে Atropine দেওয়া হয়। IV রুটে ওষুধ খুব ধীরে পুশ করতে হবে।</div>
+    </article>
+
+    <article class="rx-card" id="op-poisoning" data-title="Organophosphate OP poisoning atropine">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>অর্গানোফসফরাস বিষক্রিয়া (OP Poisoning)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>কীটনাশক খেয়ে লালা পড়া এবং চোখের মণি ছোট হওয়া।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Atrovet / Tropin vet (1mg/1ml, Atropine Sulfate)</span><span class="rx-dose">0.2–2 mg/kg</span></span></li>
+        <li><span><span class="rx-drug">Normal Saline (0.9% NaCl)</span><span class="rx-dose">10–20 ml/kg IV/SC</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="ivermectin-poisoning" data-title="Ivermectin poisoning Neostigmine cramping">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>আইভারমেকটিন বিষক্রিয়া</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>ওভারডোজের কারণে কাঁপুনি, অন্ধত্ব বা অসংলগ্ন চলাফেরা।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Stigmin / G-Neostigmin</span><span class="rx-dose">1 ml amp/12.5–25 kg</span></span></li>
+        <li><span><span class="rx-drug">Normal Saline + Nerve Tonic (B1,B6,B12) + Dexamethasone</span><span class="rx-dose">10–20 ml/kg</span></span></li>
+        <li><span><span class="rx-drug">উত্তেজনা থাকলে: Tab. Sedil / Xyril</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card critical" id="acetaminophen-poisoning" data-title="Acetaminophen paracetamol poisoning cat cyanosis">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>প্যারাসিটামল বিষক্রিয়া (Acetaminophen Poisoning)</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">1 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>জিহ্বা নীলাভ (Cyanosis), মুখ ফোলা এবং চকোলেট রঙের প্রস্রাব।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Tab. Tylace / Mucomist 600mg (N-acetylcysteine)</span><span class="rx-dose">1st dose 1/4, then q3h</span></span></li>
+        <li><span><span class="rx-drug">Syp. Rox (Activated Charcoal)</span><span class="rx-dose">5 ml/kg q3h</span></span></li>
+        <li><span><span class="rx-drug">Syp. Envit C / PA Zinc (Vit-C/Zinc)</span></span></li>
+        <li><span><span class="rx-drug">Syp. Avolac (Lactulose)</span></span></li>
+      </ol>
+      <div class="warn-box">বিড়ালে Paracetamol (Napa) ও Ketoprofen/Diclofenac ব্যবহার সম্পূর্ণ নিষিদ্ধ।</div>
+    </article>
+
+    <article class="rx-card" id="food-poisoning" data-title="Food poisoning dog rotten food vomiting">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>ফুড পয়জনিং (Food Poisoning)</h3></div></div>
+      <div class="chips"><span class="chip">🐶 Dog</span><span class="chip">15 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>পচা খাবার খেয়ে পেট ফোলা এবং বমি।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Syp. Oxecone MS (Magaldrate + Simethicone)</span><span class="rx-dose">3 চামচ q12h</span></span></li>
+        <li><span><span class="rx-drug">Tab. Amodis vet (Metronidazole)</span><span class="rx-dose">1+0+1, 5 দিন</span></span></li>
+        <li><span><span class="rx-drug">Cap. Maxpro 20mg (Esomeprazole)</span><span class="rx-dose">1+0+1, 5 দিন + ORS</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="other-poisoning" data-title="B-lactamase NSAID drug overdose">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>অন্যান্য বিষক্রিয়া (B-Lactamase / NSAID / Drug Overdose)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>ভুলবশত অ্যান্টিবায়োটিক বা ব্যথানাশকের ওভারডোজ।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Normal Saline</span><span class="rx-dose">20 ml/kg, IV/SC, q3h</span></span></li>
+        <li><span><span class="rx-drug">Kidney Tonic ও Red Liver (Herbal/Liver Extract)</span><span class="rx-dose">1 ml/kg, দিনে ২ বার</span></span></li>
+      </ol>
+    </article>
+
+    <article class="info-card full" style="grid-column:1/-1" id="emergency-misc" data-title="Bee sting heat stroke snake bite anti-venom">
+      <h3>জরুরি অবস্থা (Bee Sting / Heat Stroke / Snake Bite)</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>অবস্থা</th><th>চিকিৎসা</th></tr></thead>
+        <tbody>
+          <tr><td class="drug">মৌমাছির হুল</td><td>Inj. Tropin Vet (Atropine) ও Inj. Dexavet/Dexaren</td></tr>
+          <tr><td class="drug">হিট স্ট্রোক</td><td>Inj. Normal Saline (10–20 ml/kg), Inj. Aminovit ও Syp. PA Zinc</td></tr>
+          <tr><td class="drug">সাপের কামড়</td><td>Inj. Anti-Venom (AV) 10 ml স্যালাইনের সাথে, Inj. Aminovit ও Inj. Vaxitet Ig (Tetanus Ig)</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ 07 QUICK DRUG DOSAGE GUIDE ============================================================ -->
+<section class="catgroup" data-group="07" id="cat-07">
+  <div class="catgroup-head"><span class="gi">07</span><h2>দ্রুত ওষুধের ডোজ গাইড (Quick Drug Dosage Guide)</h2></div>
+  <p class="catgroup-sub">Generic &amp; Trade Names — Bangladesh Market</p>
+  <div class="grid">
+
+    <article class="info-card" id="antiemetics" data-title="Anti-emetics Ondansetron Domperidone Metoclopramide">
+      <h3>১. বমি নিরোধক (Anti-emetics)</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>Drug</th><th>Cat</th><th>Dog</th></tr></thead>
+        <tbody>
+          <tr><td class="drug">Ondansetron (Emistat 8mg/4ml)</td><td class="dose">0.11 ml IV/IM</td><td class="dose">0.05–0.1 ml IV/IM</td></tr>
+          <tr><td class="drug">Domperidone (Domin Syp 5mg/5ml)</td><td class="dose">0.05–0.1 ml PO</td><td class="dose">2–5 ml PO</td></tr>
+          <tr><td class="drug">Metoclopramide (Metopil 10mg/2ml)</td><td class="dose">0.04–0.08 ml</td><td class="dose">0.02–0.08 ml</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+
+    <article class="info-card" id="antibiotics-guide" data-title="Antibiotics Ceftriaxone Cefixime Amoxicillin dosage">
+      <h3>২. অ্যান্টিবায়োটিক</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>Drug</th><th>Cat</th><th>Dog</th></tr></thead>
+        <tbody>
+          <tr><td class="drug">Ceftriaxone (Acicef 1gm/10ml)</td><td class="dose">0.25–0.5 ml IM</td><td class="dose">0.25 ml IM</td></tr>
+          <tr><td class="drug">Cefixime (Cef-3 Syp 100mg/5ml)</td><td class="dose">0.25–0.6 ml PO</td><td class="dose">0.6 ml PO</td></tr>
+          <tr><td class="drug">Amoxicillin (Moxilin Vet 150mg/ml)</td><td class="dose">0.07–0.14 ml</td><td class="dose">0.06–0.13 ml</td></tr>
+          <tr><td class="drug">Amoxi-Clav (Moxaclav Syp 156.25mg/5ml)</td><td class="dose">0.3–0.6 ml PO</td><td class="dose">0.4 ml PO</td></tr>
+        </tbody>
+      </table></div>
+      <p>Acicef ডাইলিউশন: ১গ্রাম ভায়াল ১০ml distilled water-এ মেশালে প্রতি ১ml-এ ১০০mg। গুলে পর নরমাল টেম্পারেচারে ৬ ঘণ্টা, ফ্রিজে ২৪ ঘণ্টা ভালো থাকে।</p>
+    </article>
+
+    <article class="info-card" id="nsaid-steroid" data-title="NSAIDs steroids Meloxicam Dexamethasone">
+      <h3>৩. ব্যথানাশক ও স্টেরয়েড</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>Drug</th><th>Cat</th><th>Dog</th></tr></thead>
+        <tbody>
+          <tr><td class="drug">Meloxicam (Mel-Vet 5mg/ml)</td><td class="dose">0.06 ml — once</td><td class="dose">0.04 ml initial, 0.02 ml subsequent</td></tr>
+          <tr><td class="drug">Dexamethasone (Dexavet 1mg/ml)</td><td class="dose">1 ml IV (Asthma)</td><td class="dose">4–6 ml IV (Shock)</td></tr>
+        </tbody>
+      </table></div>
+      <p>Mel-Vet: কুকুরে প্রথম দিন 0.04 ml, পরের দিনগুলোতে 0.02 ml।</p>
+    </article>
+
+    <article class="info-card" id="anthelmintics-guide" data-title="Anthelmintics dewormer Pyrantel Fenbendazole">
+      <h3>৪. কৃমিনাশক</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>Drug</th><th>Cat</th><th>Dog</th></tr></thead>
+        <tbody>
+          <tr><td class="drug">Pyrantel Pamoate (Melphin Syp 250mg/5ml)</td><td class="dose">0.2 ml PO</td><td class="dose">0.3 ml PO</td></tr>
+          <tr><td class="drug">Helminticide-L (Tablet)</td><td colspan="2" class="dose">1/10 Tablet per kg (10kg = 1 tab)</td></tr>
+          <tr><td class="drug">Fenbendazole (Fenvet 500mg)</td><td colspan="2" class="dose">1/10 Tab, PO (50 mg/kg)</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+
+    <article class="info-card" id="antihistamines-guide" data-title="Antihistamines Fexofenadine Chlorpheniramine">
+      <h3>৫. অ্যান্টি-হিস্টামিন</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>Drug</th><th>Cat</th><th>Dog</th></tr></thead>
+        <tbody>
+          <tr><td class="drug">Fexofenadine (Fenadin Syp 30mg/5ml)</td><td class="dose">1.5–2 ml total</td><td class="dose">0.3–0.8 ml PO</td></tr>
+          <tr><td class="drug">Chlorpheniramine (Histavet/Phenadryl 10mg/ml)</td><td class="dose">0.2–0.4 ml bid</td><td class="dose">0.02–0.05 ml tid</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+
+    <article class="info-card" id="bronchodilator-fluids" data-title="Bronchodilator Salbutamol fluids normal saline dextrose">
+      <h3>৬. ব্রঙ্কোডাইলেটর ও ৭. ফ্লুইড</h3>
+      <p><b>Salbutamol (Azmasol Inhaler):</b> 90–100 mcg (1 puff), inhalation।</p>
+      <p><b>Normal Saline:</b> 10–20 ml SC (max 20 ml একস্থানে)।</p>
+      <p><b>Dextrose 5%/10%/25%:</b> প্রয়োজন অনুযায়ী, PO/IV।</p>
+      <div class="note-box">১ কেজির ডোজ মনে রাখার সহজ উপায়: বেশিরভাগ ইনজেকশন (Histavet, Mel-Vet, M-Pain) ১ কেজিতে 0.1 ml; বেশিরভাগ সিরাপ ০.৫ ml প্রতি কেজি; ইনসুলিন সিরিঞ্জ ব্যবহার করুন ক্ষুদ্র ডোজের জন্য নিখুঁতভাবে।</div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ 08 FLUID THERAPY ============================================================ -->
+<section class="catgroup" data-group="08" id="cat-08">
+  <div class="catgroup-head"><span class="gi">08</span><h2>ফ্লুইড থেরাপি (Fluid Therapy &amp; Rehydration)</h2></div>
+  <div class="grid full">
+    <article class="info-card" id="fluid-guide" data-title="Fluid therapy rehydration guide dose basis 20-40 ml per kg">
+      <p><b>Dose basis:</b> ২০–৪০ ml প্রতি কেজি (ডিহাইড্রেশনের মাত্রা অনুযায়ী)।</p>
+      <h4>১. রিহাইড্রেশন ফ্লুইড</h4>
+      <ul>
+        <li>Normal Saline (0.9% NaCl) — ডায়রিয়া/বমিতে — <span class="rx-dose">20–40 ml/kg</span> IV/SC/IP</li>
+        <li>Hartman's / Cholera Saline — তীব্র ডিহাইড্রেশন ও ইলেক্ট্রোলাইট ব্যালেন্সে — <span class="rx-dose">20–40 ml/kg</span> (তীব্রতায় বাড়তে পারে)</li>
+        <li>ORS — আধা লিটার পানিতে ১ প্যাকেট, অল্প অল্প বারবার</li>
+      </ul>
+      <h4>২. শক্তিবর্ধক (Energy Supplement)</h4>
+      <p>Dextrose 5%/10%/25% — <span class="rx-dose">5–10 ml/kg</span> ধীরে IV বা মুখে। <span style="color:var(--red)">সতর্কতা: ২৫–৫০% শুধু IV — SC দিলে টিস্যু ক্ষতিগ্রস্ত হয়।</span></p>
+      <h4>৩. বিশেষ অবস্থা</h4>
+      <ul>
+        <li>Blood Loss/Anemic — Hartman's বা Normal Saline দিয়ে ভলিউম ঠিক রাখা</li>
+        <li>Parvo/GE — মুখে কিছু না (NPO); শুধু IV Fluid</li>
+      </ul>
+      <div class="warn-box">দৈনিক নোট: SC-তে ঘাড়ের চামড়ার নিচে ১ কেজির জন্য সর্বোচ্চ ২০ ml। Dextrose 25–50% কখনো SC নয়। হার্ট/কিডনি সমস্যা থাকলে Slow IV। Standard IV Set-এ ১৫–২০ ফোঁটায় ১ ml হয়।</div>
+    </article>
+
+    <article class="rx-card full" style="grid-column:1/-1" id="fpv-ge-protocol" data-title="Feline Panleukopenia Parvo Severe GE Protocol">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>FPV / Parvo / Severe GE Protocol</h3></div></div>
+      <div class="warn-box">বমি বন্ধ না হওয়া পর্যন্ত (সাধারণত ৩–৫ দিন) মুখে কোনো খাবার, পানি বা ওষুধ সম্পূর্ণ নিষিদ্ধ।</div>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>ধরন</th><th>Trade Name</th><th>Dose /kg</th><th>Route</th></tr></thead>
+        <tbody>
+          <tr><td>অ্যান্টিবায়োটিক</td><td class="drug">Marbovet / Marbon</td><td class="dose">0.025–0.05 ml</td><td>SC/IM</td></tr>
+          <tr><td>বমি নিরোধক</td><td class="drug">Emistat (Ondansetron)</td><td class="dose">0.05–0.1 ml</td><td>IV/IM</td></tr>
+          <tr><td>অ্যান্টি-প্রোটোজোয়াল</td><td class="drug">Metryl/Metron (Metronidazole)</td><td class="dose">4 ml (20mg/kg)</td><td>Slow IV</td></tr>
+          <tr><td>গ্যাস্ট্রিক/এসিডিটি</td><td class="drug">Seclo/Open (Omeprazole)</td><td class="dose">0.12–0.25 ml</td><td>IV</td></tr>
+          <tr><td>নিউট্রিশন/শক্তি</td><td class="drug">Aminovit</td><td class="dose">0.2 ml</td><td>IV/IM</td></tr>
+        </tbody>
+      </table></div>
+      <p>Hartman's/Cholera Saline 20–40 ml/kg IV/SC (১২ ঘণ্টা অন্তর ২ বার, ৫ দিন); জ্বর না থাকলে Dextrose 5% 10–20 ml IV।</p>
+      <div class="warn-box">Metronidazole IV অত্যন্ত ধীরে দিতে হবে — দ্রুত দিলে স্নায়বিক সমস্যা/খিঁচুনি হতে পারে।</div>
+    </article>
+  </div>
+</section>
+
+<!-- ============================================================ 09 VITAMINS & PROBIOTICS ============================================================ -->
+<section class="catgroup" data-group="09" id="cat-09">
+  <div class="catgroup-head"><span class="gi">09</span><h2>ভিটামিন ও প্রোবায়োটিক্স (Vitamins &amp; Probiotics)</h2></div>
+  <div class="grid">
+    <article class="info-card" id="vitamins" data-title="Vitamin A B C herbal tonic per kg">
+      <h3>ভিটামিন সাপ্লিমেন্ট (Per 1 kg)</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>ভিটামিন</th><th>Trade Name</th><th>ডোজ</th></tr></thead>
+        <tbody>
+          <tr><td>Vitamin A</td><td class="drug">Retinol Fort (Cap)</td><td class="dose">১টি/২০কেজি, সাপ্তাহিক ১বার</td></tr>
+          <tr><td>Vitamin B-Complex</td><td class="drug">V-Plex / Becozin (Syp)</td><td class="dose">0.5–1 ml, দিনে ১বার</td></tr>
+          <tr><td>Vitamin C</td><td class="drug">Ceevit / Vita-C</td><td class="dose">25–50 mg, দিনে ২বার</td></tr>
+          <tr><td>Vitamin C (Inj)</td><td class="drug">Ascoson (500mg/5ml)</td><td class="dose">0.2–0.5 ml IV/IM</td></tr>
+          <tr><td>Herbal Tonic</td><td class="drug">Cinkara (Syp)</td><td class="dose">0.5 ml, দিনে ২বার</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+    <article class="info-card" id="probiotics" data-title="Probiotics Enterogermina Probio">
+      <h3>প্রোবায়োটিকস</h3>
+      <p><b>Enterogermina</b> (Oral Suspension) — 1 ml দিনে ২বার (১কেজির জন্য); বড় কুকুরে ১টি পুরো টিউব দিনে ২বার।</p>
+      <p><b>Probio</b> (Tab/Cap) — ১/১০ ভাগ, দিনে ২বার মুখে।</p>
+      <div class="note-box">Vitamin C — বিড়ালের Gingivitis বা ভাইরাল ইনফেকশনে খুব ভালো কাজ করে। Probiotics — অ্যান্টিবায়োটিকের অন্তত ২–৩ ঘণ্টা পর দিতে হয়, নাহলে অ্যান্টিবায়োটিক প্রোবায়োটিকের ব্যাকটেরিয়া ধ্বংস করবে। Multivitamin — বিড়ালে Taurine যুক্ত (Pet Me Gel, Cat Star) হার্ট ও চোখের জন্য ভালো।</div>
+    </article>
+  </div>
+</section>
+
+<!-- ============================================================ 10 DERMATOLOGY ============================================================ -->
+<section class="catgroup" data-group="10" id="cat-10">
+  <div class="catgroup-head"><span class="gi">10</span><h2>ডার্মাটোলজি (Dermatology &amp; Wound Care)</h2></div>
+  <div class="grid">
+
+    <article class="info-card" id="skin-ointment" data-title="Skin ointment section Povidone Iodine Ketoconazole">
+      <h3>Skin &amp; Ointment Section</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>ব্যবহার</th><th>Generic</th><th>Trade (BD)</th></tr></thead>
+        <tbody>
+          <tr><td>ক্ষত পরিষ্কার</td><td>Povidone Iodine</td><td class="drug">Viodin / Povisep</td></tr>
+          <tr><td>ছত্রাক (Fungal)</td><td>Ketoconazole/Clotrimazole</td><td class="drug">Fungidal</td></tr>
+          <tr><td>সার্জিক্যাল ক্ষত</td><td>Bacitracin+Neomycin</td><td class="drug">Nebanol / Neobacrin</td></tr>
+          <tr><td>চুলকানি/অ্যালার্জি</td><td>Clobetasol Propionate</td><td class="drug">Dermasol-N / Aclobet-N</td></tr>
+          <tr><td>ম্যাগট (পোকা)</td><td>—</td><td class="drug">Lorexane / Turpentine Oil</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+
+    <article class="rx-card" id="allergic-dermatitis" data-title="Allergic Dermatitis Pyoderma dog itching pus">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>১. অ্যালার্জিক ডার্মাটাইটিস/ পায়োডার্মা</h3></div></div>
+      <div class="chips"><span class="chip">🐶 Dog</span><span class="chip">20 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>তীব্র চুলকানি, নির্দিষ্ট ঋতুতে বৃদ্ধি এবং চামড়ায় পুঁজ।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Ampicin Vet (Ampicillin)</span><span class="rx-dose">2 ml IM</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. M Pain Vet 0.5% (Meloxicam)</span><span class="rx-dose">1 ml SC</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Histavet (Chlorpheniramine)</span><span class="rx-dose">1 ml IM</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Oint. Dermasol N</span><span class="rx-dose">Topical</span><br><span class="rx-freq">ড্রেসিং এর পর দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. PA Zinc (Zinc Sulfate)</span><span class="rx-dose">1 চা চামচ</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+      </ol>
+      <div class="rx-foot"><b>Topical/Supportive</b>
+        <ul>
+          <li>Medicated শ্যাম্পু: Ketoconazole+Chlorhexidine (Nizoder/Ketocon) সপ্তাহে ২বার, ১০-১৫ মিনিট রেখে ধোয়া</li>
+          <li>Mupirocin (Bactropan/Mupic) দিনে ২বার গভীর ক্ষতে</li>
+          <li>Omega-3&amp;6 বা Syp. V-Plex ত্বক রিকভারিতে সহায়ক</li>
+        </ul>
+      </div>
+      <div class="warn-box">Pyoderma: অ্যান্টিবায়োটিক কোর্স কমপক্ষে ১৪-২১ দিন। Steroid ব্যবহারে ডোজ ধীরে ধীরে কমিয়ে (Tapering) বন্ধ করতে হবে।</div>
+    </article>
+
+    <article class="rx-card" id="fungal-dermatitis" data-title="Fungal Dermatitis Ringworm cat">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>২. ছত্রাকজনিত চর্মরোগ (Fungal Dermatitis)</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">3 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>গোলাকার লোমহীন দাগ (Ringworm), খুশকি এবং ক্রমাগত গা চাটা।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Syp. Cefixime 100mg</span><span class="rx-dose">1.5 ml PO</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Phenadryl (Diphenhydramine)</span><span class="rx-dose">0.5 ml IM</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Oint. Dermasol N</span><br><span class="rx-freq">ড্রেসিং পর দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. Nystat (Nystatin)</span><span class="rx-dose">2.5 ml (১/২ চামচ)</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. PA Zinc</span><span class="rx-dose">1 চা চামচ</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+      </ol>
+      <div class="rx-foot"><b>ড্রেসিং বাথ</b><p>Sodi Bi Carb, CuSO₄ (Copper Sulfate), Povin</p></div>
+    </article>
+
+    <article class="rx-card" id="traumatic-wound" data-title="Traumatic Wound Myiasis cat larva">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>৩. ক্ষত ও পোকাযুক্ত ক্ষত (Traumatic Wound/ Myiasis)</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">3 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>ক্ষত থেকে দুর্গন্ধযুক্ত রস বের হওয়া এবং লার্ভার উপস্থিতি।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. M Pain Vet 0.5%</span><span class="rx-dose">0.15 ml SC</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Streptopen 2.5gm</span><span class="rx-dose">0.5 ml IM</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Phenadryl</span><span class="rx-dose">0.5 ml IM</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Oint. Neobacrin/Dermasol N/Neocin</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Parasitin/Acimec 1% (Ivermectin)</span><span class="rx-dose">0.15 ml SC (৫দিন অন্তর)</span></span></li>
+        <li><span><span class="rx-drug">ড্রেসিং</span><br><span class="rx-freq">প্রথম ২দিন H₂O₂, পরে ৩-৫দিন Povin দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">মাছি তাড়াতে: Oil of Turpentine/Ectonil</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="bite-wound" data-title="Bite wound cat fighting rabies tetanus">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>৪. কামড়ের ক্ষত (Bite Wound)</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">3 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>অন্য প্রাণীর সাথে মারামারি, কামড়ের গভীর ছিদ্র ও চারপাশ ফুলে যাওয়া।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. M Pain Vet 0.5%</span><span class="rx-dose">0.15 ml SC</span></span></li>
+        <li><span><span class="rx-drug">Inj. Streptopen 2.5gm</span><span class="rx-dose">0.5 ml IM, ২বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Phenadryl</span><span class="rx-dose">0.5 ml IM</span></span></li>
+        <li><span><span class="rx-drug">ভ্যাকসিনেশন: Rabies (১ম, ৭ম, ২১তম দিন)</span></span></li>
+        <li><span><span class="rx-drug">Tetanus (ATS + Ig)</span><span class="rx-dose">একক ডোজ</span></span></li>
+        <li><span><span class="rx-drug">স্পট Frontline (Fipronil)</span><span class="rx-dose">দিনে ১বার / Ectonil</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="alopecia" data-title="Alopecia hair loss cat hormonal nutritional">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>৫. লোম পড়া (Alopecia)</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">2.5 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>হরমোনাল বা পুষ্টির অভাবে নির্দিষ্ট স্থানের লোম ঝরে চামড়া বের হওয়া।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Helminthicide L</span><span class="rx-dose">১/৩ ট্যাবলেট</span><br><span class="rx-freq">৫দিন অন্তর ২বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. PA Zinc / Zesup Vet</span><span class="rx-dose">2 ml</span><br><span class="rx-freq">দিনে ১বার, ৭দিন</span></span></li>
+        <li><span><span class="rx-drug">Syp. PB Tonic (Vit-B Complex)</span><span class="rx-dose">2 ml</span><br><span class="rx-freq">দিনে ১বার, ৭দিন</span></span></li>
+        <li><span><span class="rx-drug">Tab. Ivera 6mg / Inj. Parasitin / Syp. Acimec</span><span class="rx-dose">0.05 ml/kg</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="ectoparasite" data-title="Ectoparasite mange tick cat">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>৬. বাহ্যিক পরজীবী/ আঠালি/ উকুন</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">2.5 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>শরীরে আঠালি দেখা যাওয়া, রক্তশূন্যতা এবং লেজের গোড়ায় কামড়ানোর প্রবণতা।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Tab. Ivera 6mg / Inj. Parasitin / Syp. Acimec (Ivermectin)</span></span></li>
+        <li><span><span class="rx-drug">Syp. PA Zinc ও PB Tonic</span><span class="rx-dose">2 ml</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card full" style="grid-column:1/-1" id="scabies" data-title="Scabies cat mange crust itching Ivermectin dose chart">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>৭. Scabies</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">2.5 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>কানের কিনারে ও কনুইতে মামড়ি পড়া এবং তীব্র চুলকানি।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Vermic vet/Acimec/A Mectin Vet</span><span class="rx-dose">0.05 ml/kg</span></span></li>
+        <li><span><span class="rx-drug">Tab. Alice/Biomec/Ivera 6mg</span><span class="rx-dose">১টি/১০-১৫কেজি</span></span></li>
+        <li><span><span class="rx-drug">Syp. Acimec 1%</span><span class="rx-dose">১ml/২০কেজি (0.05ml/kg)</span></span></li>
+        <li><span><span class="rx-drug">Syp. Afix/Bestcef/Cefixime 100mg</span><span class="rx-dose">1.25 ml</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. Zinc vet / Zesup Vet</span><span class="rx-dose">2 ml</span><br><span class="rx-freq">দিনে ১বার, ৭দিন</span></span></li>
+        <li><span><span class="rx-drug">Syp. Cat Star/PB Tonic/Pet Me gel</span><span class="rx-dose">2 ml</span><br><span class="rx-freq">দিনে ১বার, ৭দিন</span></span></li>
+        <li><span><span class="rx-drug">Cream Arotrix/Scabex/Lorix (Permethrin 5%) বা Emulsion Scabisol (Benzyl Benzoate 25%)</span></span></li>
+        <li><span><span class="rx-drug">E-collar + লোকালি লাগিয়ে কয়েক ঘণ্টা পর ধুয়ে ফেলা, ৭দিন পরপর পুনরায় প্রয়োগ</span></span></li>
+      </ol>
+    </article>
+
+    <article class="info-card" id="ear-mites" data-title="Ear Mites infestation Ivonil Ivermectin dose table by weight">
+      <h3>Ear Mites Infestation</h3>
+      <p><b>H/O:</b> বিড়াল/কুকুর। কান চুলকানো, মাথা ঝাঁকানো ও কানের ভেতর গাঢ় খয়েরি/কালো ময়লা জমা।</p>
+      <ul>
+        <li>Inj. Ivermectin — 0.4–0.6 mg/kg SC, ১০দিন অন্তর মোট ৩টি ডোজ</li>
+        <li>Bionil Ear Cleanser — ২-৩ ফোঁটা, দিনে ১-২বার</li>
+      </ul>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>Pet Weight</th><th>Ivermectin Dose (0.2mg/kg)</th><th>Frequency</th></tr></thead>
+        <tbody>
+          <tr><td>2 kg (Kitten)</td><td class="dose">0.04 mL</td><td>Repeat after 14 days</td></tr>
+          <tr><td>5 kg (Adult Cat)</td><td class="dose">0.1 mL</td><td>Repeat after 14 days</td></tr>
+          <tr><td>10 kg (Medium Dog)</td><td class="dose">0.2 mL</td><td>Repeat after 14 days</td></tr>
+          <tr><td>20 kg (Large Dog)</td><td class="dose">0.4 mL</td><td>Repeat after 14 days</td></tr>
+        </tbody>
+      </table></div>
+      <div class="warn-box">আইভারমেকটিন ইনজেকশনে সঠিক ওজন নিশ্চিত করুন — মাত্রাতিরিক্ত হলে নার্ভাস সমস্যা তৈরি করতে পারে।</div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ 11 OPHTHALMOLOGY & EAR ============================================================ -->
+<section class="catgroup" data-group="11" id="cat-11">
+  <div class="catgroup-head"><span class="gi">11</span><h2>চোখ ও কানের যত্ন (Ophthalmology &amp; Ear Care)</h2></div>
+  <div class="grid">
+
+    <article class="info-card" id="eye-ear-general" data-title="Eye ear care general Ciprofloxacin Ofloxacin drops">
+      <h3>Eye &amp; Ear — General Reference</h3>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>সমস্যা</th><th>Generic</th><th>Trade (BD)</th><th>ডোজ</th></tr></thead>
+        <tbody>
+          <tr><td>চোখের ইনফেকশন</td><td>Ciprofloxacin/Moxifloxacin</td><td class="drug">Ciprocin/Optiamox</td><td class="dose">১ ফোঁটা, ৩-৪বার</td></tr>
+          <tr><td>তীব্র প্রদাহ</td><td>Tobramycin+Dexa</td><td class="drug">Tobracin-D/Cinerex-D</td><td class="dose">১ ফোঁটা, ২বার</td></tr>
+          <tr><td>চোখের অ্যালার্জি</td><td>Olopatadine</td><td class="drug">Alocot/Patadin</td><td class="dose">১ ফোঁটা, ২বার</td></tr>
+          <tr><td>কানের ইনফেকশন</td><td>Ofloxacin</td><td class="drug">Candistin/Oflocin/Otic-C</td><td class="dose">২-৩ ফোঁটা, ২বার</td></tr>
+        </tbody>
+      </table></div>
+      <div class="warn-box">চোখে Ulcer থাকলে কখনো স্টেরয়েডযুক্ত ড্রপ (Tobradex) ব্যবহার করবেন না। E-Collar ব্যবহার করুন যাতে প্রাণী চেটে/ঘষে না ফেলে।</div>
+    </article>
+
+    <article class="rx-card" id="conjunctivitis" data-title="Conjunctivitis Corneal Ulcer cat cloudy eye">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>৯. চোখের ইনফেকশন ও কর্নিয়ার আলসার</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">2 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>চোখ আংশিক বন্ধ রাখা, লাল হওয়া এবং মণিতে সাদা মেঘলা দাগ।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Syp. Afix/Bestcef/Cefixime 100mg</span><span class="rx-dose">1.25 ml</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Eye drop Aquatear/Teargen</span><span class="rx-dose">2-3 ফোঁটা</span><br><span class="rx-freq">দিনে ২বার ধোয়া</span></span></li>
+        <li><span><span class="rx-drug">Eye Drop Eyemox-D/Moxidex</span><br><span class="rx-freq">স্থানীয়ভাবে দিনে ৩-৪বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. Acitrin/Alatrol/Atrizin</span><span class="rx-dose">½ চা-চামচ</span><br><span class="rx-freq">দিনে ১বার, ৭দিন</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="glaucoma" data-title="Glaucoma cat buphthalmos">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>১০. গ্লুকোমা (Glaucoma)</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span></div>
+      <div class="rx-history"><b>H/O</b><br>চোখ অস্বাভাবিক বড় হয়ে যাওয়া (Buphthalmos) এবং চোখের মণি স্থির থাকা।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Ed. Timolol/Timosol</span><span class="rx-dose">1 ফোঁটা</span><br><span class="rx-freq">দিনে ২-৩বার</span></span></li>
+        <li><span><span class="rx-drug">Ed. Optibet/Locular</span><span class="rx-dose">1 ফোঁটা</span><br><span class="rx-freq">দিনে ২-৩বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. PB Tonic</span><span class="rx-dose">2 ml</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="dry-eye" data-title="Dry Eye cat">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>১০.১ Dry Eye</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">2 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>চোখ শুকনো, চোখের জল কম পড়ছে, মাঝে মাঝে চোখ চুলকাচ্ছে। লালচে ভাব নেই।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Eye Drop Teargen</span><br><span class="rx-freq">দিনে দুইবার চোখ ধোয়ার জন্য</span></span></li>
+        <li><span><span class="rx-drug">Eye Drop Fresh Tear</span><span class="rx-dose">3-4 ফোঁটা</span><br><span class="rx-freq">দিনে ৩-৪বার</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="blepharitis" data-title="Blepharitis cat eyelids irritated">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>১০.২ Blepharitis</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">2 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>চোখের পাতায় লালচে ভাব, চুলকানো ও অল্প পুঁজ জমা। ৩-৪দিন ধরে অস্বস্তি।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Eye drop Teargen</span><span class="rx-dose">2-3 ফোঁটা</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Eye drop Civodex/Moxidex</span><br><span class="rx-freq">দিনে ৩-৪বার</span></span></li>
+        <li><span><span class="rx-drug">Injection MPain Vet 0.5%</span><span class="rx-dose">0.2 ml SC</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Syrup Cefixime 100mg</span><span class="rx-dose">1.25 ml</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Syrup Alatrol</span><span class="rx-dose">½ চা-চামচ</span><br><span class="rx-freq">দিনে ১বার, ৭দিন</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="otitis" data-title="Otitis Externa Media cat ear discharge">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>৮. কানের প্রদাহ (Otitis Externa/Media)</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">2.5 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>মাথা ঝাঁকানো, কান চুলকানো এবং ভেতর থেকে দুর্গন্ধযুক্ত মোম/পুঁজ বের হওয়া।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Ear Drop Moxidex</span><span class="rx-dose">3-4 ফোঁটা</span><br><span class="rx-freq">দিনে ৩বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. Cefixime</span><span class="rx-dose">1.25 ml</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Mel vet 0.5%</span><span class="rx-dose">0.2 ml SC</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. Alatrol</span><span class="rx-dose">2.5 ml</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Tab. Sedil</span><span class="rx-dose">½ ট্যাবলেট</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+      </ol>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ 12 RESPIRATORY ============================================================ -->
+<section class="catgroup" data-group="12" id="cat-12">
+  <div class="catgroup-head"><span class="gi">12</span><h2>শ্বাসতন্ত্র (Respiratory Medicine)</h2></div>
+  <div class="grid">
+
+    <article class="info-card full" style="grid-column:1/-1" id="respiratory-guide" data-title="Respiratory medicine guide bronchodilator nebulization Aminophylline">
+      <h3>Respiratory Medicine Guide (Per 1 kg)</h3>
+      <h4>১. ব্রঙ্কোডাইলেটর</h4>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>Drug</th><th>Cat</th><th>Dog</th></tr></thead>
+        <tbody>
+          <tr><td class="drug">Aminophylline (Tab 100mg/Inj 125mg/5ml)</td><td class="dose">Inj 0.2ml IV slow (5mg/kg); Tab 1/20</td><td class="dose">Inj 0.4ml IV slow (10mg/kg); Tab 1/10</td></tr>
+          <tr><td class="drug">Salbutamol (Tab Brodil 2mg)</td><td colspan="2" class="dose">১/৪০ ভাগ (0.05 mg/kg)</td></tr>
+          <tr><td class="drug">Inhaler Azmasol (5mg/ml)</td><td colspan="2" class="dose">0.01 ml/kg (স্পেসার সহ)</td></tr>
+        </tbody>
+      </table></div>
+      <h4>২. নেবুলাইজেশন</h4>
+      <p>Windel Plus (Salbutamol+Ipratropium) ১ amp (3ml) + Budicort (Budesonide) ১ amp (2ml) — মিশিয়ে নেবুলাইজার মেশিনে দিনে ২বার।</p>
+      <h4>৩. কফ সিরাপ ও নাসাল ড্রপ</h4>
+      <p>Syp. Dexpoten/Expoten/Bronchovet — 0.5 ml মুখে দিনে ২বার। Antazol Nasal Drop 0.05% — প্রতি নাসারন্ধ্রে ১ ফোঁটা, দিনে ৩-৪বার।</p>
+      <h4>৪. অ্যান্টিবায়োটিক ও স্টেরয়েড</h4>
+      <p>Acicef 1gm/10ml — 0.25ml (Dog) – 0.5ml (Cat) IM/IV। Dexavet 1mg/ml — 0.2ml (সাধারণ) – 1ml (তীব্র অ্যাজমা)।</p>
+      <div class="warn-box">Aminophylline IV অবশ্যই খুব ধীরে দিতে হবে — দ্রুত দিলে হার্ট রেট বেড়ে যেতে পারে। Nasal Drop: নাক বন্ধ থাকলে বিড়াল খাবার খেতে চায় না (গন্ধ শুঁকে খায়) — তাই খাবারের আগে নাক পরিষ্কার জরুরি।</div>
+    </article>
+
+    <article class="rx-card" id="pneumonia" data-title="Pneumonia Asthma tachypnea">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>নিউমোনিয়া ও শ্বাসকষ্ট (Pneumonia/Asthma)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>দ্রুত শ্বাস নেওয়া (Tachypnea), ঘড়ঘড় শব্দ এবং তাপমাত্রা বৃদ্ধি।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Acicef 3 (Ceftriaxone)</span><span class="rx-dose">0.1ml/kg</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Mpain/Set 101 (Meloxicam/Tolfenamic)</span><span class="rx-dose">0.1ml/kg</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Tab. Mkast 4mg (Montelukast)</span><span class="rx-dose">১টি/৫কেজি</span></span></li>
+        <li><span><span class="rx-drug">Syp. Tofen (Ketotifen)</span><span class="rx-dose">1ml/kg</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="sneezing-cold" data-title="Sneezing cold rhinitis nasal discharge">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>নাক দিয়ে ডিসচার্জ ও সাধারণ ঠান্ডা (Rhinitis)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>হাঁচি, নাক দিয়ে তরল নিঃসরণ এবং নাক বন্ধ।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Acicef 3</span><span class="rx-dose">0.1ml/kg</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Mpain/Set 101</span><span class="rx-dose">0.1ml/kg</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Phenadryl</span><span class="rx-dose">0.1ml/kg</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Tab. Mkast 4mg</span><span class="rx-dose">১টি/৫কেজি</span></span></li>
+        <li><span><span class="rx-drug">Antazol nasal drop</span><br><span class="rx-freq">দিনে ৩-৪বার</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="kennel-cough" data-title="Asthma Coughing Kennel Cough allergy">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>অ্যাজমা/কাশি (Kennel Cough)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>ধুলোবালি বা অ্যালার্জির কারণে কাশি বা গলায় কিছু আটকে থাকার শব্দ।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Phenadryl</span><span class="rx-dose">0.1ml/kg</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Tab. Mkast 4mg</span><span class="rx-dose">১টি/৫কেজি</span></span></li>
+        <li><span><span class="rx-drug">Syp. Tofen</span><span class="rx-dose">1ml/kg</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+      </ol>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ 13 GASTROENTEROLOGY ============================================================ -->
+<section class="catgroup" data-group="13" id="cat-13">
+  <div class="catgroup-head"><span class="gi">13</span><h2>পরিপাকতন্ত্র (Gastroenterology)</h2></div>
+  <div class="grid">
+
+    <article class="rx-card" id="constipation" data-title="Constipation cat tenesmus lactulose">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>কোষ্ঠকাঠিন্য (Constipation)</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">3 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>মল ত্যাগের সময় কোঁত দেওয়া (Tenesmus) এবং পেট শক্ত হওয়া।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Syp. Flacol (Simethicone)</span><span class="rx-dose">2 চা চামচ</span></span></li>
+        <li><span><span class="rx-drug">Syp. Laxitol/Maxilax (Lactulose)</span><span class="rx-dose">1 চা চামচ</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. Avolac (Lactulose)</span><span class="rx-dose">1 চা চামচ</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Glysup 1.15gm (Glycerin Suppository)</span><br><span class="rx-freq">১২ ঘণ্টা অন্তর</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="vomiting-acidosis" data-title="Vomiting Acidosis cat foam gas">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>বমি ও এসিডোসিস (Vomiting/Acidosis)</h3></div></div>
+      <div class="chips"><span class="chip">🐱 Cat</span><span class="chip">2 kg</span></div>
+      <div class="rx-history"><b>H/O</b><br>খাবার পরেই বমি, মুখ দিয়ে ফেনা এবং পেটে গ্যাস।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Emiset/Emistat (Ondansetron)</span><span class="rx-dose">0.2 ml IM</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Tab. Maxpro 20mg (Esomeprazole)</span><span class="rx-dose">১/৮ অংশ</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. Carmina/Gavisol ও Pow. PA Gut (Probiotics)</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="diarrhea" data-title="Diarrhea Dysentery mucus blood">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>ডায়রিয়া ও আমাশয় (Diarrhea/Dysentery)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>পাতলা পায়খানা, রক্ত বা পিচ্ছিল আম (Mucus) যাওয়া।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Syp. Amodis (Metronidazole)</span><span class="rx-dose">0.5-0.6ml/kg</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Tab. D-con (Dicycloverine+Adsorbents)</span><span class="rx-dose">১টাব/২.৫-৩কেজি</span></span></li>
+        <li><span><span class="rx-drug">Pow. PA Gut (Probiotics) ও PA lyte (ORS)</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="colic" data-title="Colic abdominal pain sudden">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>পেট ব্যথা (Colic)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>হঠাৎ তীব্র ব্যথা, অস্থিরতা এবং পেট কামড়ানো।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Espa Vet/No Spa/Algin (Drotaverine)</span><span class="rx-dose">0.1-0.2 ml</span><br><span class="rx-freq">মাংসে/চামড়ার নিচে</span></span></li>
+        <li><span><span class="rx-drug">Tab. Maxpro 20mg</span><span class="rx-dose">১/৪ অংশ</span><br><span class="rx-freq">মুখে দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. Flacol বা Syp. Laxitol/Maxilax</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="gingivitis" data-title="Gingivitis Mouth Ulcers dog cat drooling">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>মাড়ির প্রদাহ ও মুখের ক্ষত (Gingivitis/Mouth Ulcers)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>মাড়ি লাল হওয়া, মুখ থেকে লালা পড়া এবং খেতে কষ্ট হওয়া।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Gelora/Micoral/Oroconazol Oral Gel</span><span class="rx-dose">1ml/kg</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Syp. Cefixime</span></span></li>
+        <li><span><span class="rx-drug">Inj. M Pain vet</span><span class="rx-dose">0.2ml SC</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Povin mouth wash</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Tab. Ribosin (Vit B2)</span><br><span class="rx-freq">দিনে ১বার, ১৫দিন</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="rectal-prolapse-1" data-title="Rectal Prolapse cat constipation straining">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>মলদ্বার/জরায়ু বের হওয়া (Rectal/Uterine Prolapse)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>বিড়াল। কোষ্ঠকাঠিন্য, কৃমির সংক্রমণ বা অতিরিক্ত কোঁথ দেওয়ার ফলে মলদ্বার বাইরে বেরিয়ে আসা।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Tab. Drotapan 40mg</span><br><span class="rx-freq">বেদনা ও স্পাজম কমাতে</span></span></li>
+        <li><span><span class="rx-drug">Inj. Antibiotic (Acicef 3/Streptopen)</span></span></li>
+        <li><span><span class="rx-drug">Inj. Antihistamine (Phenadryl/Histavet)</span></span></li>
+        <li><span><span class="rx-drug">Syp. Avolac</span><span class="rx-dose">1 চা চামচ</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Glysup 1.15gm</span><br><span class="rx-freq">১২ ঘণ্টা অন্তর</span></span></li>
+      </ol>
+      <div class="rx-foot"><b>সার্জিক্যাল ব্যবস্থাপনা</b><p>Saline wash, gauze+needle, 3ml syringe, purse-string suture; সার্জারির পর ২৪ঘণ্টা E-Collar এবং নরম/তরল খাবার। প্রয়োজনে Syp. Avolac কোষ্ঠকাঠিন্য এড়াতে।</p></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ 14 MUSCULOSKELETAL ============================================================ -->
+<section class="catgroup" data-group="14" id="cat-14">
+  <div class="catgroup-head"><span class="gi">14</span><h2>হাড় ও অস্থিসন্ধি (Musculoskeletal)</h2></div>
+  <div class="grid">
+
+    <article class="rx-card" id="fracture" data-title="Fracture Lameness trauma joint injury">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>হাড় ভাঙা ও ল্যাংচানো (Fracture/Lameness)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>দুর্ঘটনায় আঘাত, জয়েন্ট ফুলে যাওয়া এবং হাঁটতে অনীহা।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Acicef 3 (Ceftriaxone)</span></span></li>
+        <li><span><span class="rx-drug">Inj. Mpain/Fixin vet (Meloxicam/Flunixin)</span></span></li>
+        <li><span><span class="rx-drug">Tab. Calorate (Calcium Orostate)</span></span></li>
+        <li><span><span class="rx-drug">Tab. Drise (Vitamin D3)</span><span class="rx-dose">১/১০ অংশ</span><br><span class="rx-freq">১৫দিন</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="arthritis" data-title="Lameness Arthritis pain joint">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>ল্যাংচানো ও বাতের ব্যথা (Arthritis)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>জয়েন্টে ব্যথা, পা টেনে হাঁটা।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Mpain/Set 101/Fixin vet</span><span class="rx-dose">0.1ml/kg</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Tab. Maxpro 20mg</span><span class="rx-dose">১/৪ অংশ</span><br><span class="rx-freq">মুখে দিনে ২বার</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="rickets" data-title="Rickets Osteomalacia bone bending calcium vitamin D">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>রিকেটস ও অস্থিরোগ (Rickets/Osteomalacia)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>হাড় বাঁকা হওয়া এবং জয়েন্টে ব্যথা।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Tab. Calbostar/Calorate 400mg</span><span class="rx-dose">১/১০ অংশ</span><br><span class="rx-freq">একদিন অন্তর, ১৫দিন</span></span></li>
+        <li><span><span class="rx-drug">Tab. D-Balance/D-rise 2000IU</span><span class="rx-dose">১/১০ অংশ</span><br><span class="rx-freq">দিনে ১বার, ১৫দিন, রোদে রাখা</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="obesity" data-title="Obesity weight gain fat">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>স্থূলতা (Obesity)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>অতিরিক্ত চর্বি জমে ওজন বৃদ্ধি।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Tab. Atova 10mg (Atorvastatin)</span><span class="rx-dose">১/১০ অংশ</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Tab. Drise 2000IU</span><span class="rx-dose">১/১০ অংশ</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Tab. E Tab 200mg (Vit E)</span><span class="rx-dose">১/১০ অংশ</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+      </ol>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ 15 UROLOGY ============================================================ -->
+<section class="catgroup" data-group="15" id="cat-15">
+  <div class="catgroup-head"><span class="gi">15</span><h2>ইউরোলজি (Urology)</h2></div>
+  <div class="grid">
+
+    <article class="rx-card" id="uti" data-title="UTI Urolithiasis bloody urine">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>ইউরিনারি পাথর ও ইনফেকশন (UTI/Urolithiasis)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>প্রস্রাবের সময় কান্না, লিঙ্গ পথ চাটা এবং রক্তমিশ্রিত প্রস্রাব।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Acicef 3 (Ceftriaxone)</span></span></li>
+        <li><span><span class="rx-drug">Syp. Urokit Plus (Potassium+Magnesium Citrate)</span></span></li>
+        <li><span><span class="rx-drug">Ammonium Chloride</span><span class="rx-dose">1gm/kg</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+      </ol>
+    </article>
+
+    <article class="rx-card" id="flutd" data-title="FLUTD urinary bladder repeated attempts crying">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>মূত্রনালীর পাথর ও প্রস্রাবে ইনফেকশন (UTI/FLUTD)</h3></div></div>
+      <div class="rx-history"><b>H/O</b><br>বারবার প্রস্রাবের চেষ্টা কিন্তু অল্প হওয়া এবং কান্নাকাটি।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Acicef 3, Inj. Mpain ও Inj. Phenadryl</span><br><span class="rx-freq">আগের মতো ডোজ</span></span></li>
+        <li><span><span class="rx-drug">Syp. Urokit Plus (Potassium Citrate)</span></span></li>
+        <li><span><span class="rx-drug">Ammonium Chloride</span><span class="rx-dose">1gm/kg</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+      </ol>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ 16 PARASITOLOGY ============================================================ -->
+<section class="catgroup" data-group="16" id="cat-16">
+  <div class="catgroup-head"><span class="gi">16</span><h2>প্যারাসাইটোলজি (Parasitology / Deworming)</h2></div>
+  <div class="grid full">
+    <article class="info-card" id="parasitic-infestation" data-title="Parasitic infestation roundworm tapeworm deworming schedule">
+      <h3>কৃমির আক্রমণ (Parasitic Infestation) &amp; Deworming Schedule</h3>
+      <p><b>H/O:</b> অরুচি, পেট ফোলা এবং মলের সাথে কৃমি যাওয়া।</p>
+      <ul>
+        <li><b>Round worm:</b> Tab. Helminthicide L (Levamisole+Niclosamide) — 1.2–3kg: ¼ tab · 3.1–6kg: ½ tab · 6.1–9kg: ¾ tab · 10kg+: 1 tab</li>
+        <li><b>Tape worm:</b> Syp. Melphin/Delentin (Pyrantel Pamoate) — 0.4 ml/kg</li>
+      </ul>
+      <h4>কুকুর ও বিড়ালের কৃমিনাশক টাইমলাইন</h4>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>ঔষধ</th><th>প্রয়োগের সময়</th><th>বুস্টার</th><th>কাজ</th></tr></thead>
+        <tbody>
+          <tr><td class="drug">Helminthicide L</td><td>২-৩ সপ্তাহ বয়সে</td><td>৩-৫ দিন পর</td><td>গোল কৃমি ও ফুসফুসের কৃমি</td></tr>
+          <tr><td class="drug">Paraclear Vet (Fenbendazole)</td><td>৪ সপ্তাহ বয়সে</td><td>৩-৫ দিন পর</td><td>গোল, ফিতা কৃমি ও জিয়ার্ডিয়া</td></tr>
+          <tr><td class="drug">Acimec 1% (Ivermectin)</td><td>৬ সপ্তাহ বয়সে</td><td>প্রয়োজন অনুযায়ী</td><td>বাহ্যিক ও অভ্যন্তরীণ পরজীবী</td></tr>
+          <tr><td class="drug">Helminthicide L (Repeat)</td><td>৬-৮ সপ্তাহ বয়সে</td><td>৩-৫ দিন পর</td><td>পুনরায় সংক্রমণ রোধ</td></tr>
+          <tr><td class="drug">Delentin/Etrax/Triclabendazole</td><td>৬-৮ সপ্তাহ বয়সে</td><td>—</td><td>কলিজা কৃমি (Liver Fluke)</td></tr>
+          <tr><td class="drug">Ivermectin+Triclabendazole</td><td>৬-৮ সপ্তাহ বয়সে</td><td>—</td><td>মিশ্র পরজীবী ও কলিজা কৃমি</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note-box">৩-৫ দিনের বুস্টার ডোজ কেন: প্রথম ডোজে প্রাপ্তবয়স্ক কৃমি মারা গেলেও তাদের ডিম/লার্ভা থেকে যায়, যা কয়েকদিন পর ফুটে বের হলে দ্বিতীয় ডোজে মারা পড়ে। ওজন অনুযায়ী সঠিক ডোজ জরুরি — কম হলে Resistance তৈরি হবে, বেশি হলে বিষক্রিয়া হতে পারে। খালি পেটে দিলে ভালো কাজ করে। ডিওয়ার্মিং-এর পর ৩-৫ দিন Liver Tonic দেওয়া ভালো।</div>
+    </article>
+  </div>
+</section>
+
+<!-- ============================================================ 17 SURGICAL & POST-OP ============================================================ -->
+<section class="catgroup" data-group="17" id="cat-17">
+  <div class="catgroup-head"><span class="gi">17</span><h2>সার্জিক্যাল ও পোস্ট-অপারেটিভ কেয়ার</h2></div>
+  <div class="grid">
+    <article class="rx-card" id="post-surgical" data-title="Post-Surgical Care infection prevention healing">
+      <div class="rx-head"><div class="rx-mark">℞</div><div class="rx-title"><h3>অপারেশন পরবর্তী চিকিৎসা (Post-Surgical Care)</h3></div></div>
+      <div class="rx-history"><b>উদ্দেশ্য</b><br>সার্জারির পর ইনফেকশন রোধ ও ক্ষত শুকানোর জন্য।</div>
+      <ol class="rx-list">
+        <li><span><span class="rx-drug">Inj. Acicef 3 (Ceftriaxone)</span><span class="rx-dose">0.1ml/kg</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Mpain/Set 101 (Meloxicam)</span><span class="rx-dose">0.1ml/kg</span><br><span class="rx-freq">দিনে ১বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Phenadryl (Diphenhydramine)</span><span class="rx-dose">0.1ml/kg</span><br><span class="rx-freq">দিনে ২বার</span></span></li>
+        <li><span><span class="rx-drug">Inj. Ascoson (Vitamin C)</span></span></li>
+        <li><span><span class="rx-drug">Inj. Aminovit Plus Vet (Amino Acids+Vitamins)</span></span></li>
+      </ol>
+    </article>
+  </div>
+</section>
+
+<!-- ============================================================ 18 FELINE LIFESTYLE & HUSBANDRY ============================================================ -->
+<section class="catgroup" data-group="18" id="cat-18">
+  <div class="catgroup-head"><span class="gi">18</span><h2>বিড়াল লালন-পালন (Feline Lifestyle &amp; Husbandry)</h2></div>
+  <div class="grid">
+
+    <article class="info-card" id="cat-breeding" data-title="Cat Breeding maturity gestation litter size weaning">
+      <h3>Cat Breeding</h3>
+      <ul>
+        <li>Maturity Age: 5–6 মাস বয়সে যৌন পরিপক্বতা</li>
+        <li>Gestation Period: ৬০–৬৫ দিন</li>
+        <li>Litter Size: সাধারণত ৩–৭টি বাচ্চা</li>
+        <li>Newborn: প্রথম ১০ দিন চোখ বন্ধ থাকে, কিছুদিন কানেও শোনে না</li>
+        <li>Nesting: অন্ধকার, শান্ত, নির্জন কোণ পছন্দ করে</li>
+        <li>Weaning: ৬–৭ সপ্তাহ বয়সে দুধ ছাড়ানো শুরু</li>
+        <li>Annual Birth Rate: বছরে সর্বোচ্চ ৩ বার</li>
+      </ul>
+    </article>
+
+    <article class="info-card" id="feeding-adult-cat" data-title="Feeding of adult cats diet requirements per kg">
+      <h3>Feeding — Adult Cats</h3>
+      <ul>
+        <li>বেশি শুকনো খাবার হজম করতে পারে না; পর্যাপ্ত পানি না পেলে কিডনি ফেইলিউরের ঝুঁকি</li>
+        <li>স্বাভাবিক খাবার: আধা কাপ দুধ + ৮০গ্রাম রান্না মাংস + কিছু বিস্কুট</li>
+        <li>প্রতিদিন মাংস প্রয়োজন (লাল/সাদা মাংস বা মাছ); সবজি মিশিয়েও দেওয়া যায়</li>
+        <li>Vitamin A সংশ্লেষ করতে পারে না — গাজরের মতো সবজি দরকার</li>
+        <li>গরুর দুধ পাতলা করে দিতে হবে</li>
+      </ul>
+      <div class="table-wrap"><table class="dose-table">
+        <thead><tr><th>Cat Weight</th><th>Daily Food Requirement</th></tr></thead>
+        <tbody>
+          <tr><td>Per kg body weight</td><td class="dose">25 g</td></tr>
+          <tr><td>Average Cat (4–5 kg)</td><td class="dose">110–115 g/day</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+
+    <article class="info-card" id="feeding-kitten" data-title="Feeding Kittens nursing weaning formula hand rearing">
+      <h3>Feeding — Kittens</h3>
+      <ul>
+        <li>৭-৮ সপ্তাহ পর্যন্ত শুধু মায়ের দুধ</li>
+        <li>Orphan Care: fostering দিয়ে পালন করা যায়</li>
+        <li>৮ সপ্তাহ পর ধীরে ধীরে fortified cow's milk বা baby milk powder</li>
+        <li>গরুর দুধ দ্বিগুণ পানিতে পাতলা করে দিতে হবে</li>
+        <li>প্রতি ৩-৪ ঘণ্টা পরপর বোতলে খাওয়াতে হবে</li>
+      </ul>
+      <div class="note-box">দুধ খাওয়ানোর পর পেট আলতোভাবে ঘষে দিলে হজম, প্রস্রাব ও মলত্যাগ উদ্দীপিত হয় — নবজাতক বাচ্চারা নিজে থেকে প্রস্রাব/মল করতে পারে না।</div>
+    </article>
+
+    <article class="info-card" id="outdoor-risks" data-title="Risks for Outdoor Cats vehicular trauma FeLV FIV">
+      <h3>Risks for Outdoor Cats</h3>
+      <ul>
+        <li>গাড়ির আঘাত</li>
+        <li>অন্য বিড়ালের সাথে মারামারিতে কামড়ের ক্ষত</li>
+        <li>কামড়ের মাধ্যমে FeLV / FIV সংক্রমণের ঝুঁকি বেশি</li>
+        <li>মাছি, আঠালি ও টক্সোপ্লাজমোসিসের ঝুঁকি বেশি</li>
+        <li>বড় প্রাণীর আক্রমণ, হারিয়ে যাওয়া</li>
+      </ul>
+      <div class="note-box">বাসার ভেতরে রাখলে বিড়াল উল্লেখযোগ্যভাবে দীর্ঘ ও সুস্থ জীবনযাপন করে।</div>
+    </article>
+
+    <article class="info-card" id="litter-box" data-title="Litter Box Management quantity location maintenance">
+      <h3>Litter Box Management</h3>
+      <ul>
+        <li>নিয়ম: বিড়ালের সংখ্যা + ১টি বক্স (১টি বিড়াল = ২টি বক্স)</li>
+        <li>শান্ত, প্রাইভেট, কম-চলাচলের জায়গায় রাখুন</li>
+        <li>কুকুর ঠেকাতে প্রবেশপথে baby gate ব্যবহার করুন</li>
+        <li>প্রতিদিন স্কুপ ও পরিষ্কার করুন</li>
+        <li>লিটারের ব্র্যান্ড/ধরন হঠাৎ পরিবর্তন করবেন না — অনীহা তৈরি হতে পারে</li>
+      </ul>
+    </article>
+
+    <article class="info-card" id="exercise-enrichment" data-title="Exercise Activity Enrichment interactive toys">
+      <h3>Exercise &amp; Sensory Enrichment</h3>
+      <ul>
+        <li>বিড়ালের ব্যায়ামের প্রয়োজন প্রায়ই উপেক্ষিত হয়</li>
+        <li>লেজার লাইট, পালকের খেলনা, রোলিং বল দিয়ে সক্রিয় রাখুন</li>
+        <li>জানালা দিয়ে পাখি/মাছ দেখা, cat-video — sensory enrichment</li>
+        <li>প্রতিদিন নির্দিষ্ট সময় ইন্টারঅ্যাক্টিভ খেলা জরুরি</li>
+      </ul>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ 19 FLEA-MYCOPLASMA-ANEMIA PATHWAY ============================================================ -->
+<section class="catgroup" data-group="19" id="cat-19">
+  <div class="catgroup-head"><span class="gi">19</span><h2>Flea–Mycoplasma–Anemia সংযোগ</h2></div>
+  <div class="grid full">
+    <article class="info-card" id="flea-mycoplasma" data-title="Flea Mycoplasma Anemia Jaundice pathway diagnostics treatment doxycycline">
+      <h3>The Flea–Mycoplasma–Anemia Connection</h3>
+      <p>মাছি ও আঠালি প্রত্যক্ষ বা পরোক্ষভাবে জন্ডিস, রক্তশূন্যতা এবং feline mycoplasmosis-এর সাথে যুক্ত হতে পারে।</p>
+      <div class="pathway">
+        <div class="pnode">Flea/Tick Infestation</div>
+        <div class="parrow">↓</div>
+        <div class="pnode">Mycoplasma haemofelis Infection</div>
+        <div class="parrow">↓</div>
+        <div class="pnode">Hemolytic Anemia</div>
+        <div class="parrow">↓</div>
+        <div class="pnode">Hyperbilirubinemia</div>
+        <div class="parrow">↓</div>
+        <div class="pnode">Jaundice (Icterus)</div>
+      </div>
+      <h4>Clinical Signs — Anemia</h4>
+      <ul><li>Pale mucous membranes</li><li>Weakness / Lethargy</li><li>Tachycardia</li><li>Weight loss</li></ul>
+      <h4>Clinical Signs — Jaundice</h4>
+      <ul><li>Yellow sclera</li><li>Yellow oral mucosa</li><li>Yellow pinnae</li><li>Dark urine</li></ul>
+      <h4>Recommended Diagnostics</h4>
+      <ul>
+        <li>CBC with reticulocyte count</li>
+        <li>Blood smear examination</li>
+        <li>PCR for Mycoplasma haemofelis (gold standard)</li>
+        <li>PCV/HCT monitoring</li>
+        <li>Total bilirubin &amp; liver profile</li>
+        <li>FeLV/FIV testing (co-infections common)</li>
+      </ul>
+      <h4>Treatment</h4>
+      <ul>
+        <li>Doxycycline <span class="rx-dose">10 mg/kg PO q24h (or 5 mg/kg q12h)</span> for 21–28 days</li>
+        <li>Strict flea and tick control</li>
+        <li>Supportive care and fluids as needed</li>
+        <li>Blood transfusion if severe anemia</li>
+        <li>Prednisolone may be considered in immune-mediated hemolysis cases</li>
+      </ul>
+      <div class="note-box">জন্ডিস ও regenerative anemia নিয়ে আসা বিড়ালে, বিশেষত মাছির ইতিহাস থাকলে, feline hemotropic mycoplasmosis differential diagnosis-এ উঁচুতে রাখা উচিত।</div>
+    </article>
+  </div>
+</section>
+
+    </div>
+
+    <footer class="pagefoot">
+      DoseMaster Small Animal Rx Reference — সংকলিত রেফারেন্স। প্রতিটি চিকিৎসা সিদ্ধান্তের আগে ক্লিনিক্যাল বিচার-বিবেচনা ও রোগীর প্রকৃত অবস্থা যাচাই করুন। এই ডকুমেন্টটি শুধুমাত্র রেফারেন্স হিসেবে ব্যবহারের জন্য।
+    </footer>
+  </main>
+</div>
+
+<script>
+  // ---- Build sidebar nav from DOM (single source of truth) ----
+  const groupsEl = document.getElementById('groups');
+  const catSections = document.querySelectorAll('.catgroup');
+  catSections.forEach((sec, idx) => {
+    const num = sec.dataset.group;
+    const headTitle = sec.querySelector('.catgroup-head h2').textContent;
+    const cards = sec.querySelectorAll('[data-title], .rx-card[id], .info-card[id]');
+    const group = document.createElement('div');
+    group.className = 'group' + (idx === 0 ? ' open' : '');
+    const btn = document.createElement('button');
+    btn.className = 'group-title';
+    btn.innerHTML = `<span class="num">${num}</span><span>${headTitle.split('(')[0].trim()}</span><span class="chev">›</span>`;
+    btn.addEventListener('click', () => group.classList.toggle('open'));
+    group.appendChild(btn);
+
+    const itemsWrap = document.createElement('div');
+    itemsWrap.className = 'group-items';
+    const seen = new Set();
+    cards.forEach(card => {
+      if(!card.id || seen.has(card.id)) return;
+      seen.add(card.id);
+      const titleEl = card.querySelector('h3, h1');
+      let label = titleEl ? titleEl.textContent.trim() : card.id;
+      label = label.length > 40 ? label.slice(0,40) + '…' : label;
+      const a = document.createElement('a');
+      a.href = '#' + card.id;
+      a.textContent = label;
+      a.dataset.target = card.id;
+      itemsWrap.appendChild(a);
+    });
+    group.appendChild(itemsWrap);
+    groupsEl.appendChild(group);
+  });
+
+  // ---- search filter ----
+  const searchInput = document.getElementById('search');
+  const searchInfo = document.getElementById('searchInfo');
+  const allCards = Array.from(document.querySelectorAll('.rx-card, .info-card'));
+  const navLinks = Array.from(document.querySelectorAll('.group-items a'));
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    if(!q){
+      allCards.forEach(c => c.classList.remove('hidden'));
+      document.querySelectorAll('.catgroup').forEach(s => s.classList.remove('hidden'));
+      navLinks.forEach(a => a.classList.remove('hidden'));
+      searchInfo.style.display = 'none';
+      return;
+    }
+    let count = 0;
+    allCards.forEach(c => {
+      const hay = (c.dataset.title || '') + ' ' + c.textContent;
+      const match = hay.toLowerCase().includes(q);
+      c.classList.toggle('hidden', !match);
+      if(match) count++;
+    });
+    document.querySelectorAll('.catgroup').forEach(sec => {
+      const anyVisible = sec.querySelectorAll('.rx-card:not(.hidden), .info-card:not(.hidden)').length > 0;
+      sec.classList.toggle('hidden', !anyVisible);
+    });
+    navLinks.forEach(a => {
+      const target = document.getElementById(a.dataset.target);
+      a.classList.toggle('hidden', target ? target.classList.contains('hidden') : true);
+    });
+    searchInfo.style.display = 'block';
+    searchInfo.textContent = count + ' result' + (count===1?'':'s') + ' found';
+  });
+
+  // ---- active link highlight on scroll ----
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        navLinks.forEach(a => a.classList.remove('active'));
+        const link = navLinks.find(a => a.dataset.target === entry.target.id);
+        if(link){
+          link.classList.add('active');
+          const grp = link.closest('.group');
+          if(grp && !grp.classList.contains('open')) grp.classList.add('open');
+        }
+      }
+    });
+  }, {rootMargin: '-15% 0px -75% 0px'});
+  document.querySelectorAll('.rx-card[id], .info-card[id]').forEach(c => observer.observe(c));
+</script>
+</body>
+</html>
